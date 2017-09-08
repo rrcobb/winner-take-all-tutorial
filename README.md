@@ -132,3 +132,16 @@ When we make a small change and save, we see the change reflected almost instant
 After my update, my browser shows:
 ![screen shot 2017-09-07 at 7 11 33 pm](https://user-images.githubusercontent.com/3818920/30193157-7e6b0764-9400-11e7-954a-b745fadd3344.png)
 
+
+
+******************
+* Mind our Mess  *
+******************
+This tutorial is incomplete! Heck, it's barely even started!
+
+What's next:
+- writing a basic component
+- writing a component with some state
+- installing and setting up redux
+- writing the game logic in redux and game components in React
+- adding styles
