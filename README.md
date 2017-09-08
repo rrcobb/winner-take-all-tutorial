@@ -19,14 +19,39 @@ A shell with bash-like commands
 A code editor
 Some familiarity with HTML, Javascript, and CSS helps
 
-# Getting Started
+
+The installation instructions are written as if you are on a mac and using [homebrew](https://brew.sh/) to manage your packages. If you aren't using a mac, you should use a different package manager:
+
+- Windows: [Choco](https://chocolatey.org/)
+- Linux: you should know your package manager
+
+If you are using a mac, install homebrew! (or download binaries - usually in the _getting started_ or _installation_ section of the linked sites)
+
+## Getting Started
+To get these instructions on your screen and a snapshot of the code at each step, you can clone this repo: https://github.com/rrcobb/winner-take-all-tutorial.git
+
+```sh
+git clone https://github.com/rrcobb/winner-take-all-tutorial.git
+```
+
+If you follow the steps, you should end up in the same place.
+
+*Installing dependencies*
+If you haven't already, [install node and npm](https://nodejs.org/en/download/package-manager/)
+```
+brew install node
+```
+
+Install [yarn](https://yarnpkg.com/en/) and create-react-app
 ```
 brew install yarn
 yarn global add create-react-app
 ```
 
+Create your app and set up git
 ```
-mkdir winner-takes-all
+create-react-app winner-takes-all
 cd winner-takes-all
 git init
+git commmit -m "initial commit"
 ```
