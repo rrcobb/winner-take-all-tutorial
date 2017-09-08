@@ -72,9 +72,12 @@ yarn start
 ```
 
 When I ran that, I saw this on my console:
+
 ![screen shot 2017-09-07 at 6 28 26 pm](https://user-images.githubusercontent.com/3818920/30192164-99a22a36-93fa-11e7-8fb3-d69c213cac34.png)
 
 And this in the browser:
+
 ![screen shot 2017-09-07 at 6 28 53 pm](https://user-images.githubusercontent.com/3818920/30192165-99b56902-93fa-11e7-98b1-04c3d2881f8f.png)
 
 ## Create your first React component
+
