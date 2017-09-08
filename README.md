@@ -21,10 +21,10 @@ If you want to really *get* the modern js stack, build one yourself:
 [Js stack from scratch](https://github.com/verekia/js-stack-from-scratch)
 
 ## Assumptions:
-A shell with bash-like commands
-A code editor
-Some familiarity with HTML, Javascript, and CSS helps
-
+- A shell with bash-like commands
+- Git
+- A code editor
+- Some familiarity with HTML, Javascript, and CSS helps
 
 The installation instructions are written as if you are on a mac and using [homebrew](https://brew.sh/) to manage your packages. If you aren't using a mac, you should use a different package manager:
 
@@ -40,7 +40,18 @@ To get these instructions on your screen and a snapshot of the code at each step
 git clone https://github.com/rrcobb/winner-take-all-tutorial.git
 ```
 
-If you follow the steps, you should end up in the same place.
+If you follow the steps below, you should end up in the same place. You can compare your code to the snapshots at each step.
+
+If you get stuck or want to jump in at a particular step, get the code for this repo as above, then
+
+```
+cd winner-take-all-tutorial
+cd step-two
+yarn install
+yarn start
+```
+
+And you should be up and running.
 
 ### Installing dependencies
 
@@ -70,7 +81,7 @@ git commmit -m "initial commit"
 
 At this point, your app should look *almost exactly* like the code in `/step_one`
 
-## Run the dev server
+## Run the development server
 
 Let's get the dev server started:
 ```
@@ -85,5 +96,39 @@ And this in the browser:
 
 ![screen shot 2017-09-07 at 6 28 53 pm](https://user-images.githubusercontent.com/3818920/30192165-99b56902-93fa-11e7-98b1-04c3d2881f8f.png)
 
+create-react-app is running a **local version of the app** - it's being served on your machine, so that you can quickly see the changes you make.
+
 ## Create your first React component
+
+As it says on the page, let's open up `src/App.js` in a code editor.
+
+```
+// src/App.js
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Welcome to React</h2>
+        </div>
+        <p className="App-intro">
+          To get started, edit <code>src/App.js</code> and save to reload.
+        </p>
+      </div>
+    );
+  }
+}
+
+export default App;
+```
+
+When we make a small change and save, we see the change reflected almost instantly in the browser. (It's pretty safe to change the text, event if the rest of the code here is still mysterious)
+
+After my update, my browser shows:
+![screen shot 2017-09-07 at 7 11 33 pm](https://user-images.githubusercontent.com/3818920/30193157-7e6b0764-9400-11e7-954a-b745fadd3344.png)
 
