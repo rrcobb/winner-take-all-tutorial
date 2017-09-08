@@ -1,18 +1,24 @@
 # Winner Take All
 A HackMIT 2017 tutorial by the friendly folks at [Fin](https://fin.com)
 
-### What you'll build
-A sweet game, based on the classic kids card game.
+**What you'll build** - A sweet game, based on the classic kids card game.
 
-### What you'll learn
-The basics of React and Redux
+**What you'll learn** - The basics of React and Redux
 
 ### Resources / Things to read later
-React tutorial
-Redux tutorial
-What's new in ES6
-create-react-app docs
-webpack docs
+[React docs](https://facebook.github.io/react/docs/hello-world.html)
+[Redux docs](http://redux.js.org/)
+[What's new in ES6](http://es6-features.org/)
+[create-react-app docs](https://github.com/facebookincubator/create-react-app)
+
+And, if you want to know more about what's happening underneath:
+[Webpack docs](https://webpack.js.org/)
+[Babel](http://babeljs.io/)
+[Eslint](https://eslint.org/)
+[CSS Autoprefixer](https://github.com/postcss/autoprefixer)
+
+If you want to really *get* the modern js stack, build one yourself:
+[Js stack from scratch](https://github.com/verekia/js-stack-from-scratch)
 
 ## Assumptions:
 A shell with bash-like commands
