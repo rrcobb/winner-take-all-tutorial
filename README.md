@@ -36,8 +36,10 @@ git clone https://github.com/rrcobb/winner-take-all-tutorial.git
 
 If you follow the steps, you should end up in the same place.
 
-*Installing dependencies*
+### Installing dependencies
+
 If you haven't already, [install node and npm](https://nodejs.org/en/download/package-manager/)
+
 ```
 brew install node
 ```
@@ -48,10 +50,31 @@ brew install yarn
 yarn global add create-react-app
 ```
 
-Create your app and set up git
+Create the app
 ```
 create-react-app winner-takes-all
 cd winner-takes-all
+```
+
+Set up git
+```
 git init
 git commmit -m "initial commit"
 ```
+
+At this point, your app should look *almost exactly* like the code in `/step_one`
+
+## Run the dev server
+
+Let's get the dev server started:
+```
+yarn start
+```
+
+When I ran that, I saw this on my console:
+![screen shot 2017-09-07 at 6 28 26 pm](https://user-images.githubusercontent.com/3818920/30192164-99a22a36-93fa-11e7-8fb3-d69c213cac34.png)
+
+And this in the browser:
+![screen shot 2017-09-07 at 6 28 53 pm](https://user-images.githubusercontent.com/3818920/30192165-99b56902-93fa-11e7-98b1-04c3d2881f8f.png)
+
+## Create your first React component
