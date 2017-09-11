@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { incrementValue } from './App.js';
+import { incrementValue } from './CardReducer.js';
 import './Card.css';
 
 class Card extends Component {

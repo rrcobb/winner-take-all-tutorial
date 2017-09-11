@@ -327,7 +327,151 @@ React apps grow more complex.  On single-page web applications like the internal
 dashboards our agents use at Fin, the need for a centralized way to manage
 application state on the front end is felt relatively quickly.
 
-Redux helps with this by providing a framework for  managing state. 
+Redux helps with this by providing a framework for  managing state. Redux
+provides a *store* which holds the current state o f the entire app. We can
+dispatch *actions* to the store, and *reducers* define how the state should
+change in response to those actions.
+
+Let's stop storing our card's value in the component's state and switch to
+managing it through the Redux store.
+
+
+
+We'll start with writing a reducer, which is simply a function that
+takes in a current state and an action and returns the next state given that
+action. Create a new file, `src/CardReducer.js`.
+
+We want to maintain the current incrementing behavior of our Card, so our Redux
+store will need to respond to a corresponding action.  We'll save that as a
+constant:
+
+
+```
+const INCREMENT_VALUE = 'IncrementValue'
+export const incrementValue = { type: INCREMENT_VALUE }
+```
+
+The second line is the action that we'll dispatch to the store from our
+component.  Redux actions are typically objects with a `type` attribute.
+Frequently there will be additional information that needs to be passed along to
+reducers and placed in the Redux state; this is often keyed under a `data`
+attribute.  Since we're doing a simple increment here, though, simply defining
+the type is sufficient to give our reducer the information needed to alter the
+state of the store.
+
+Our `cardReducer` function will take in a current state (that is, the current
+value of the card) and an action, and will return the next state (that is, the
+next value of the card -- which is the current value + 1). Its second argument
+is the action.  We've only defined one action for now, but in the future when
+our app is dispatching many different types of actions to the Redux store, we
+want to make sure this reducer only responds to some of them.
+
+
+```
+const INCREMENT_VALUE = 'IncrementValue'
+export const incrementValue = { type: INCREMENT_VALUE }
+
+export const cardReducer = ( state = 0, action ) => {
+  switch (action.type) {
+    case INCREMENT_VALUE:
+      // fill me in!
+    default:
+      return state;
+  }
+}
+
+export default cardReducer;
+```
+
+Notice how this reducer simply returns the `state` argument, untouched, if the
+action is not of the INCREMENT_VALUE type.
+
+Let's hook our reducer up to our application.  Add the following import lines to `App.js`:
+
+```
+import { combineReducers, createStore } from 'redux';
+import { cardReducer } from './CardReducer.js'
+import { Provider } from 'react-redux'
+
+```
+
+We'll use the `combineReducers` function to put together several reducers
+(though for now, just one) that will represent the state of the game.  
+
+```
+const reducer = combineReducers({card: cardReducer})
+const store = createStore(reducer)
+```
+
+We now have a `store` that will respond to our defined actions and maintain a
+`card` state that updates along with those actions.  The next step is to wrap
+our application in a `Provider` which will make the store available to
+components (once we use the `connect` function to hook them into the store).
+
+
+```
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import Card from './Card.js';
+import './App.css';
+import { combineReducers, createStore } from 'redux';
+import { cardReducer } from './CardReducer.js';
+import { Provider } from 'react-redux';
+
+const reducer = combineReducers({ card: cardReducer });
+const store = createStore(reducer);
+
+class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <div className="App">
+          <div className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h2>Winner Takes All</h2>
+          </div>
+          <Card />
+        </div>
+      </Provider>
+    );
+  }
+}
+
+export default App;
+```
+
+Finally, let's update our `Card` component to stop managing its own state and
+start connecting to the Redux store.
+
+```
+import { connect } from 'react-redux';
+import { incrementValue } from './CardReducer.js';
+```
+
+react-redux's `connect` function allows us to wrap our components in
+higher-order functions that will provide the component with values from the
+store.  Connected components specify which pieces of the store they're
+interested in using a `selector` function, and those keys will be added to the
+component's `props`.  Selectors receive the entire Redux state and return a
+mapping of that state to `props` for the component.
+
+
+In this case, our mapping will be quite simple.  Our Redux store has the card's
+value stored under the key `card` (see our `combineReducers` above), so we'll
+just return an object that grabs that from the `state`.
+
+```
+const selector = (state) => ({ value: state.card });
+```
+
+
+Our `Card` now gets a `value` from the store rather than from where it is
+rendered in `App.js`.  When you save, you should see that your card now renders
+with a value of 0.  (If you're not sure why it's a 0, raise your hand and ask, or
+grab a mentor.)
+
+
+
 
 
 ******************
