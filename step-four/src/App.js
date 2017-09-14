@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import Card from './Card.js';
+import Scoreboard from './Scoreboard.js';
 import './App.css';
 import { combineReducers, createStore } from 'redux';
-import { cardReducer } from './CardReducer.js';
+import { scoreReducer } from './ScoreReducer.js';
 import { Provider } from 'react-redux';
 
-const reducer = combineReducers({ card: cardReducer });
+const reducer = combineReducers({ score: scoreReducer });
 const store = createStore(reducer);
 
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
             <h2>Winner Takes All</h2>
           </div>
           <Card value={3} />
+          <Scoreboard />
         </div>
       </Provider>
     );

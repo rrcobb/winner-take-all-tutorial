@@ -332,16 +332,16 @@ provides a *store* which holds the current state o f the entire app. We can
 dispatch *actions* to the store, and *reducers* define how the state should
 change in response to those actions.
 
-Let's stop storing our card's value in the component's state and switch to
+Let's stop storing our scoreboard's value in the component's state and switch to
 managing it through the Redux store.
 
 
 
 We'll start with writing a reducer, which is simply a function that
 takes in a current state and an action and returns the next state given that
-action. Create a new file, `src/CardReducer.js`.
+action. Create a new file, `src/ScoreReducer.js`.
 
-We want to maintain the current incrementing behavior of our Card, so our Redux
+We want to maintain the current incrementing behavior of our Scoreboard, so our Redux
 store will need to respond to a corresponding action.  We'll save that as a
 constant:
 
@@ -359,7 +359,7 @@ attribute.  Since we're doing a simple increment here, though, simply defining
 the type is sufficient to give our reducer the information needed to alter the
 state of the store.
 
-Our `cardReducer` function will take in a current state (that is, the current
+Our `scoreReducer` function will take in a current state (that is, the current
 value of the card) and an action, and will return the next state (that is, the
 next value of the card -- which is the current value + 1). Its second argument
 is the action.  We've only defined one action for now, but in the future when
@@ -371,7 +371,7 @@ want to make sure this reducer only responds to some of them.
 const INCREMENT_VALUE = 'IncrementValue'
 export const incrementValue = { type: INCREMENT_VALUE }
 
-export const cardReducer = ( state = 0, action ) => {
+export const scoreReducer = ( state = 0, action ) => {
   switch (action.type) {
     case INCREMENT_VALUE:
       // fill me in!
@@ -380,7 +380,7 @@ export const cardReducer = ( state = 0, action ) => {
   }
 }
 
-export default cardReducer;
+export default scoreReducer;
 ```
 
 Notice how this reducer simply returns the `state` argument, untouched, if the
@@ -390,7 +390,7 @@ Let's hook our reducer up to our application.  Add the following import lines to
 
 ```
 import { combineReducers, createStore } from 'redux';
-import { cardReducer } from './CardReducer.js'
+import { scoreReducer } from './ScoreReducer.js'
 import { Provider } from 'react-redux'
 
 ```
@@ -399,13 +399,14 @@ We'll use the `combineReducers` function to put together several reducers
 (though for now, just one) that will represent the state of the game.  
 
 ```
-const reducer = combineReducers({card: cardReducer})
+const reducer = combineReducers({score: scoreReducer})
 const store = createStore(reducer)
 ```
 
 We now have a `store` that will respond to our defined actions and maintain a
-`card` state that updates along with those actions.  The next step is to wrap
-our application in a `Provider` which will make the store available to
+`score` state that updates along with those actions.  
+
+The next step is to wrap our application in a `Provider` which will make the store available to
 components (once we use the `connect` function to hook them into the store).
 
 
@@ -413,12 +414,13 @@ components (once we use the `connect` function to hook them into the store).
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import Card from './Card.js';
+import Scoreboard from './Scoreboard.js'
 import './App.css';
 import { combineReducers, createStore } from 'redux';
-import { cardReducer } from './CardReducer.js';
+import { scoreReducer } from './ScoreReducer.js';
 import { Provider } from 'react-redux';
 
-const reducer = combineReducers({ card: cardReducer });
+const reducer = combineReducers({ score: scoreReducer });
 const store = createStore(reducer);
 
 class App extends Component {
@@ -430,7 +432,8 @@ class App extends Component {
             <img src={logo} className="App-logo" alt="logo" />
             <h2>Winner Takes All</h2>
           </div>
-          <Card />
+          <Card value={3} />
+          <Scoreboard/>
         </div>
       </Provider>
     );
@@ -440,12 +443,14 @@ class App extends Component {
 export default App;
 ```
 
-Finally, let's update our `Card` component to stop managing its own state and
+Finally, let's update our `Scoreboard` component to stop managing its own state and
 start connecting to the Redux store.
+
+In `Scoreboard.js`:
 
 ```
 import { connect } from 'react-redux';
-import { incrementValue } from './CardReducer.js';
+import { incrementValue } from './ScoreReducer.js';
 ```
 
 react-redux's `connect` function allows us to wrap our components in
@@ -457,21 +462,114 @@ mapping of that state to `props` for the component.
 
 
 In this case, our mapping will be quite simple.  Our Redux store has the card's
-value stored under the key `card` (see our `combineReducers` above), so we'll
+value stored under the key `score` (see our `combineReducers` above), so we'll
 just return an object that grabs that from the `state`.
 
+Let's define this selector in `Scoreboard.js`:
+
 ```
-const selector = (state) => ({ value: state.card });
+const selector = (state) => ({ value: state.score });
 ```
 
 
-Our `Card` now gets a `value` from the store rather than from where it is
-rendered in `App.js`.  When you save, you should see that your card now renders
-with a value of 0.  (If you're not sure why it's a 0, raise your hand and ask, or
+.. and update the export to be a redux-connected version of our Scoreboard:
+
+```
+export default connect(selector)(Scoreboard)
+```
+
+Our `Scoreboard` now gets a `value` as a `prop` from the store. Let's check on
+that real quick:
+
+class Scoreboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { value: 0 };
+  }
+
+  incrementValue = () => {
+    this.setState({ value: this.state.value + 1 });
+  };
+
+  render() {
+    return (
+      <div className="scoreboard" onClick={this.incrementValue}>
+        <h1>Your score:</h1>
+        (my state): {this.state.value}
+        (my props): { this.props.value }
+      </div>
+    );
+  }
+}
+
+
+When you save, you should see that your card now renders
+with the additional store value, which is 0.  (If you're not sure why it's 0, raise your hand and ask, or
 grab a mentor.)
 
 
+Let's let Scoreboard stop managing its own state altogether.  Rather than
+incrementing the value in its own state, we can `dispatch` the `incrementScore`
+value to the Redux store, instead.  In order to do so, we need to provide a
+`prop` to the `Scoreboard`.
 
+React-redux's `connect` function takes a second argument, the `dispatch`, that
+allows us to do just that.
+
+```
+const dispatcher = dispatch = ({incrementValue: () => dispatch(incrementValue)})
+```
+
+Recall that `incrementValue` is defined in `ScoreReducer.js`, and is simply an
+object with a `type` attribute.  The `dispatch` function is called directly on
+our Redux store.  Since we defined a reducer that responds to the
+`INCREMENT_VALUE` action by incrementing the score, the score will update in the
+redux store.  
+
+
+When we pass this `dispatcher` as an argument to `connect`, the `incrementValue`
+prop will be available to our Scoreboard component.
+
+```
+export default connect(selector, dispatcher)(Scoreboard)
+```
+
+We can now get rid of Scoreboard's state altogether, and use our new
+`incrementValue` prop to directly update the score in the Redux state!
+
+```
+import React, { Component } from 'react';
+import './Scoreboard.css';
+import { connect } from 'react-redux';
+import { incrementValue } from './ScoreReducer.js';
+
+class Scoreboard extends Component {
+  render() {
+    return (
+      <div className="scoreboard" onClick={this.props.incrementValue}>
+        <h1>Your score:</h1>
+        {this.props.value}
+      </div>
+    );
+  }
+}
+
+const selector = state => ({ value: state.score });
+const dispatcher = dispatch => ({ incrementValue: () => dispatch(incrementValue) });
+
+export default connect(selector, dispatcher)(Scoreboard);
+
+```
+
+When you save, you should see the scoreboard rendering only one score -- the
+Redux score -- and it should increment when you click, just like it did back
+when Scoreboard was managing the score in its own state.
+
+## Step Five: Writing some Game Logic
+
+We now have all the tools we need to implement the rest of this game.  The rules
+for Winner Take All are simple: two players repeatedly draw cards from a deck
+and the card with the higher value wins. 
 
 
 ******************
