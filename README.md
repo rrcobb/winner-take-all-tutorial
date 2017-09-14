@@ -132,7 +132,7 @@ When we make a small change and save, we see the change reflected almost instant
 After my update, my browser shows:
 ![screen shot 2017-09-07 at 7 11 33 pm](https://user-images.githubusercontent.com/3818920/30193157-7e6b0764-9400-11e7-954a-b745fadd3344.png)
 
-### Step Two: Let's create a new component!
+### Step Two: Creating a new component
 We're building a card game, so we'll want a way to display an individual card.
 Create a new file in the `src` folder called `Card.js`. 
 
@@ -262,66 +262,66 @@ the component.  While components receive props from their parent, they manage
 their own state.
 
 We update the state using the `setState` method.  To see this in action, we'll
-add a new 'cheating' feature to our Card.  We'll make it so that every time we
-click the card, it increments its value by one.  
+add a new component, the `Scoreboard`.  For now, we're going to cheat: when we
+click the scoreboard, it just increments its value by one.  
 
 ```
-class Card extends Component {
+class Scoreboard extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: props.value}
+    this.state = {value: 0}
   }
 
   render() {
     return (
-        <div className="card">
-        {this.props.value}
+        <div className="scoreboard">
+          <h1>Your score:</h1>
+          {this.state.value}
         </div>
         )
   }
 }
+
 ```
 
-We've set a default state in the `constructor` method (don't worry just yet
-about what `super(props)` does if you haven't seen that before).  Our Card now
-starts off with a `this.state.value` of 0.  *Prove it to yourself* by updating
-the `render` method to display `this.state.value` instead of `this.props.value`.
-When you do so and save the file, you should see the card continue to display
-the 3 value it's being passed from `App.js` -- only now, it's displaying it from
-its `state` rather than its props.
+Next, let's update our `App` component to render the `Scoreboard`. Do this
+(referring back to how we rendered `Card`) and save, ensuring that your
+scoreboard is now being rendered.
 
-Let's do something stateful.  When we click on the card, we'll increment the
+We've set a default state in the `constructor` method (don't worry just yet
+about what `super(props)` does if you haven't seen that before).  Our Scoreboard
+starts off with a `this.state.value` of 0.  
+
+Let's do something stateful.  When we click on the scoreboard, we'll increment the
 value in `state`.
 
 ```
-class Card extends Component {
+class Scoreboard extends Component {
   constructor(props) {
     super(props);
-    this.state = {value: props.value}
+    this.state = {value: 0}
   }
 
-  handleClick = () => {
-
+  incrementValue = () => {
+    this.setState({value: this.state.value + 1})
   };
 
   render() {
     return (
-        <div className="card" onClick={this.handleClick}>
-        {this.props.value}
+        <div className="scoreboard" onClick={this.incrementValue}>
+          {this.state.value}
         </div>
-        )
+      )
   }
 }
 ```
 
-By passing a reference to the instance method `handleClick` as the `onClick`
-prop, we can now do something in response to clicks on the div.  *Fill out the
-`handleClick` 
-function to use `setState` to increment the value in state**.
+By passing a reference to the instance method `incrementValue` as the `onClick`
+prop, we can now do something in response to clicks on the div.  
 
-If all goes well, we're now cheating at cards.  
+If all goes well, we can now click on our Scoreboard to increment our score.  
 
-## State management in Redux
+## Step Four: State management in Redux
 When components are left to handle their own state, things get messy quickly as
 React apps grow more complex.  On single-page web applications like the internal
 dashboards our agents use at Fin, the need for a centralized way to manage
