@@ -571,6 +571,10 @@ We now have all the tools we need to implement the rest of this game.  The rules
 for Winner Take All are simple: two players repeatedly draw cards from a deck
 and the card with the higher value wins. 
 
+Events in our game will be dispatched to the Redux store as redux actions,
+similar to `INCREMENT_VALUE`.  They will affect the Redux state in ways that we
+define through additional reducers.  
+
 
 ******************
 * Mind our Mess  *
@@ -580,6 +584,6 @@ This tutorial is incomplete! Heck, it's barely even started!
 What's next:
 - [x] writing a basic component
 - [x] writing a component with some state
-- [ ] installing and setting up redux
-- [ ] writing the game logic in redux and game components in React
-- [ ] adding styles
+- [x] installing and setting up redux
+- [x] writing the game logic in redux and game components in React
+- [x] adding styles
