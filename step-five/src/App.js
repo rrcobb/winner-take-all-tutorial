@@ -4,10 +4,15 @@ import Card from './Card.js';
 import Scoreboard from './Scoreboard.js';
 import './App.css';
 import { combineReducers, createStore } from 'redux';
-import { scoreReducer } from './ScoreReducer.js';
+import { scoreReducer, computerScoreReducer } from './ScoreReducer.js';
+import { cardReducer, dealCards } from './CardReducer.js';
 import { Provider } from 'react-redux';
 
-const reducer = combineReducers({ score: scoreReducer });
+const reducer = combineReducers({
+  score: scoreReducer,
+  computerScore: computerScoreReducer,
+  cards: cardReducer,
+});
 const store = createStore(reducer);
 
 class App extends Component {
@@ -19,7 +24,15 @@ class App extends Component {
             <img src={logo} className="App-logo" alt="logo" />
             <h2>Winner Takes All</h2>
           </div>
-          <Card value={3} />
+          computer
+          <Card player="human" />
+          <Card player="computer" />
+          you
+          <div>
+            <button onClick={() => dealCards(store.dispatch)}>
+              <h1>Play!</h1>
+            </button>
+          </div>
           <Scoreboard />
         </div>
       </Provider>

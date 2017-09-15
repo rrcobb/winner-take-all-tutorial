@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import Card from './Card.js';
-import Scoreboard from './Scoreboard.js';
 import './App.css';
 
 class App extends Component {
@@ -13,7 +12,6 @@ class App extends Component {
           <h2>Winner Takes All</h2>
         </div>
         <Card value={3} />
-        <Scoreboard />
       </div>
     );
   }

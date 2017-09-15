@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import './Card.css';
 
 class Card extends Component {
@@ -11,4 +12,10 @@ class Card extends Component {
   }
 }
 
-export default Card;
+const selector = (state, ownProps) => {
+  return {
+    value: state.cards[ownProps.player],
+  };
+};
+
+export default connect(selector)(Card);
