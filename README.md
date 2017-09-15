@@ -5,20 +5,19 @@ A HackMIT 2017 tutorial by the friendly folks at [Fin](https://fin.com)
 
 **What you'll learn** - The basics of React and Redux
 
-### Resources / Things to read later
-[React docs](https://facebook.github.io/react/docs/hello-world.html)
-[Redux docs](http://redux.js.org/)
-[What's new in ES6](http://es6-features.org/)
-[create-react-app docs](https://github.com/facebookincubator/create-react-app)
+## Before we get started
+- If you get stuck, raise your hand, and someone will come by to try to help
+- You can download all the code seen here to follow along
 
-And, if you want to know more about what's happening underneath:
-[Webpack docs](https://webpack.js.org/)
-[Babel](http://babeljs.io/)
-[Eslint](https://eslint.org/)
-[CSS Autoprefixer](https://github.com/postcss/autoprefixer)
+```sh
+git clone https://github.com/rrcobb/winner-take-all-tutorial.git
+```
 
-If you want to really *get* the modern js stack, build one yourself:
-[Js stack from scratch](https://github.com/verekia/js-stack-from-scratch)
+- You can pick up at any of 'steps', in case you get behind / go 'off piste'
+- If you _have_ got the code working at a particular step, check with the people next to you and see if you can get them unstuck
+- It's worth experimenting a _ton_ with react and redux. 
+
+If you follow the steps here, your code should (more or less) match up with the code at each step in this repo.
 
 ## Assumptions:
 - A shell with bash-like commands
@@ -33,27 +32,9 @@ The installation instructions are written as if you are on a mac and using [home
 
 If you are using a mac, install homebrew! (or download binaries - usually in the _getting started_ or _installation_ section of the linked sites)
 
-## Getting Started
-To get these instructions on your screen and a snapshot of the code at each step, you can clone this repo: https://github.com/rrcobb/winner-take-all-tutorial.git
-
-```sh
-git clone https://github.com/rrcobb/winner-take-all-tutorial.git
-```
-
-If you follow the steps below, you should end up in the same place. You can compare your code to the snapshots at each step.
-
-If you get stuck or want to jump in at a particular step, get the code for this repo as above, then
-
-```
-cd winner-take-all-tutorial
-cd step-two
-yarn install
-yarn start
-```
-
-And you should be up and running.
-
 ### Installing dependencies
+
+While we give a quick intro to react, follow the steps here to get set up.
 
 If you haven't already, [install node and npm](https://nodejs.org/en/download/package-manager/)
 
@@ -81,6 +62,18 @@ git commmit -m "initial commit"
 
 At this point, your app should look *almost exactly* like the code in `/step_one`
 
+## React Basics
+React is based on _components_. A Component encapsulates the _look_ and _behavior_ of some part of your app. They are _reusable_, _composable_, and _declarative_. 
+
+ We'll be working with the web version of React today, but there are lots of component frameworks that take the principles of React and let you write code for many different clients 
+- Web
+- Native
+- VR
+
+There are also lots of other popular new component frameworks - [Vue](https://vuejs.org/), [Riot](http://riotjs.com/), [Polymer](https://www.polymer-project.org/), (even [Angular](https://angular.io/) is more and more component-oriented). They have important differences in their interfaces, but they share the core idea of being able to move from a _sketch of the things you want on the page_ to _working components_ quickly and easily.
+
+We'll focus on thinking in components, and you can take that pattern with you and use it in whatever framework you like.
+
 ## Run the development server
 
 Let's get the dev server started:
@@ -98,9 +91,45 @@ And this in the browser:
 
 create-react-app is running a **local version of the app** - it's being served on your machine, so that you can quickly see the changes you make.
 
-## Create your first React component
 
-As it says on the page, let's open up `src/App.js` in a code editor.
+## What has `create-react-app` given us?
+[`create-react-app`](https://github.com/facebookincubator/create-react-app) is a useful tool for getting an app spun up quickly, so you can start experimenting and iterating. At the end of this Readme, there are some links to explore more about the libraries that it's using underneath. (hint: modern js is pretty complicated and changing very fast).
+
+Let's explore the files that `create-react-app` has given us.
+```
+- node_modules
+  - ...
+- public
+  - ...
+- src
+  - App.css
+  - App.js
+  - App.test.js
+  - index.css
+  - index.js
+  - logo.svg
+  - registerServiceWorker.js
+package.json
+...
+```
+
+`node_modules` is where our javascript dependencies live.
+
+`package.json` specifies some info about our app, and, importantly, is where we list our dependencies.
+
+`public` is where our _built_ files will live - it will be managed for us by `react-scripts` (the package behind `create-react-app`)
+
+`src` is where we will make changes. Lets take a closer look at the files in there.
+
+
+`index.js` is the _entrypoint_ to our app - it's where the build will start, and has some oft the plumbing needed to get React to start rendering components on the page.
+`index.css` has a tiny set of styles that apply to the whole app.
+`App.js` is our _root React component_
+`App.test.js` is a test file, in case we wanted to be good developers and write tests for our code (ha! At a hackathon?!?!?)
+`App.css` is where we will put the styles for our app
+`registerServiceWorker.js` handles registering a _Service Worker_. This is the basis for building a [Progressive Web App](https://goo.gl/KwvDNy) that works offline as well as on. 
+
+We'll mostly be working inside of `App.js`, so let's open it up in a code editor and start experimenting!
 
 ```
 // src/App.js
@@ -132,10 +161,41 @@ When we make a small change and save, we see the change reflected almost instant
 After my update, my browser shows:
 ![screen shot 2017-09-07 at 7 11 33 pm](https://user-images.githubusercontent.com/3818920/30193157-7e6b0764-9400-11e7-954a-b745fadd3344.png)
 
-### Step Two: Creating a new component
+Try making other changes to the render method and see what happens. Can you:
+- Change what the text says?
+- Change the style of the text? (there are lots of ways to do this - try to find more than one!)
+- Show a link?
+- Show a different image?
+- Display a random number when the page loads?
+
+## A sketch of Winner-Take-All
+
+We want to build an online version of the popular kids card game. We want to show:
+- A deck of cards, face down, one for each player
+- A face-up card for each player that changes each round
+- A scoreboard
+- A button to play a card
+- A button to start a new game
+
+
+
+## Create your first component
 We're building a card game, so we'll want a way to display an individual card.
 Create a new file in the `src` folder called `Card.js`. 
 
+Our component in `Card.js` will define and export a new class, `Card`, that extends the
+`React.Component` class.  
+
+```
+import React, { Component } from 'react';
+import './Card.css';
+
+class Card extends Component {
+}
+
+export default Card;
+
+```
 Let's create a `Card.css` file and define the following style:
 
 ```
@@ -163,20 +223,7 @@ display: inline-block;
 }
 ```
 
-Our component in `Card.js` will define and export a new class, `Card`, that extends the
-`React.Component` class.  
-
-```
-import React, { Component } from 'react';
-import './Card.css';
-
-class Card extends Component {
-}
-
-export default Card;
-
-```
-React componentscan define several [lifecycle
+React components can define several [lifecycle
 methods](https://facebook.github.io/react/docs/react-component.html) which are
 called at points such as *mounting*, *receiving props*, and *rendering*.
 
@@ -575,15 +622,32 @@ Events in our game will be dispatched to the Redux store as redux actions,
 similar to `INCREMENT_VALUE`.  They will affect the Redux state in ways that we
 define through additional reducers.  
 
-******************
-* Mind our Mess  *
-******************
-This tutorial is incomplete! Heck, it's barely even started!
 
-What's next:
-<<<<<<< HEAD
-- [x] writing a basic component
-- [x] writing a component with some state
-- [x] installing and setting up redux
-- [x] writing the game logic in redux and game components in React
-- [ ] adding styles
+## Other things you might want to do with React
+- fetch data from a server
+- animate components
+- 
+
+### Where to turn next?
+- [React docs](https://facebook.github.io/react/docs/hello-world.html)
+- [Redux docs](http://redux.js.org/)
+- [What's new in ES6](http://es6-features.org/)
+- [create-react-app docs](https://github.com/facebookincubator/create-react-app)
+
+And, if you want to know more about what's happening underneath:
+- [Webpack docs](https://webpack.js.org/)
+- [Babel](http://babeljs.io/)
+- [Eslint](https://eslint.org/)
+- [CSS Autoprefixer](https://github.com/postcss/autoprefixer)
+
+If you want to really *get* the modern js stack, build one yourself:
+- [Js stack from scratch](https://github.com/verekia/js-stack-from-scratch)
+
+If you want to use React for Mobile or VR
+- [React Native](https://facebook.github.io/react-native/)
+- [React VR](https://facebook.github.io/react-vr/)
+
+If you want to learn more about Fin
+- [Fin](https://www.fin.com/)
+- [/Jobs](https://www.fin.com/jobs)
+
