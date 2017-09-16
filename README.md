@@ -13,17 +13,19 @@ A HackMIT 2017 tutorial by the friendly folks at [Fin](https://fin.com)
 git clone https://github.com/rrcobb/winner-take-all-tutorial.git
 ```
 
-- You can pick up at any of 'steps', in case you get behind / go 'off piste'
+- You can pick up at any of steps, in case you get behind or go 'off piste'
 - If you _have_ got the code working at a particular step, check with the people next to you and see if you can get them unstuck
 - It's worth experimenting a _ton_ with react and redux. 
 
 If you follow the steps here, your code should (more or less) match up with the code at each step in this repo.
 
+_Caveat Emptor_: For ease of demonstration, we are not following some best practices that are the norm when developing React/Redux apps. In particular, we aren't splitting code into multiple files. You probably should.
+
 ## Assumptions:
 - A shell with bash-like commands
 - Git
 - A code editor
-- Some familiarity with HTML, Javascript, and CSS helps
+- Some familiarity with HTML, Javascript, and CSS
 
 The installation instructions are written as if you are on a mac and using [homebrew](https://brew.sh/) to manage your packages. If you aren't using a mac, you should use a different package manager:
 
@@ -34,7 +36,7 @@ If you are using a mac, install homebrew! (or download binaries - usually in the
 
 ### Installing dependencies
 
-While we give a quick intro to react, follow the steps here to get set up.
+While we give a quick intro to React, follow the steps here to get set up.
 
 If you haven't already, [install node and npm](https://nodejs.org/en/download/package-manager/)
 
@@ -343,6 +345,23 @@ class App extends Component {
 ```
 
 We're starting to see how we can reuse a component with slightly different behavior in different places.
+
+## State management
+
+Redux
+
+```
+yarn add redux react-redux
+```
+
+
+
+
+
+
+
+
+
 
 ## Adding some State
 State is how React components manage data that is 1) relevant to rendering, 
