@@ -1,4 +1,4 @@
-// This code represents our Winner Takes All game after completing Step 1 of the tutorial
+// This code represents our Winner Takes All game after completing Step 1b of the tutorial
 import React, { Component } from 'react';
 import './App.css';
 

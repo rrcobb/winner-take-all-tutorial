@@ -1,6 +1,5 @@
-// TODO This code represents our Winner Takes All game after completing Step 2 of the tutorial
+// This code represents our Winner Takes All game after completing Step 2 of the tutorial
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { connect, Provider } from 'react-redux';
 import { createStore } from 'redux';
@@ -8,16 +7,16 @@ import { createStore } from 'redux';
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Winner Takes All</h2>
+      <Provider store={store}>
+        <div className="App">
+          <div className="App-header">
+            <h2>Winner Takes All</h2>
+          </div>
+          <Deck cards={[{ value: 5, suit: 'heart' }, { value: 12, suit: 'diamond' }]} />
+          <ConnectedDeck />
+          <Controls />
         </div>
-        <Card value={3} />
-        <Card value={4} />
-        <Card value={6} />
-        <Card value={'Q <3'} />
-      </div>
+      </Provider>
     );
   }
 }
@@ -65,6 +64,14 @@ class Deck extends Component {
     );
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    cards: state,
+  };
+};
+
+const ConnectedDeck = connect(mapStateToProps)(Deck);
 
 class Scoreboard extends Component {
   render() {
@@ -135,22 +142,23 @@ const shuffle = array => {
   return array;
 };
 
-const players = ['Nicole', 'Rob'];
+const defaultState = [];
 
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
     case 'NewGame': {
       const deck = shuffle(newDeck());
-      const handsize = deck.length / players.length;
-      return players.reduce((memo, name, index) => {
-        let cards = deck.slice(handsize * index, handsize * (index + 1));
-        memo[name] = { cards, card: null };
-        return memo;
-      }, {});
+      return deck;
     }
     default:
       return state;
   }
 };
+
+const store = createStore(
+  reducer,
+  // https://github.com/zalmoxisus/redux-devtools-extension
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 export default App;
