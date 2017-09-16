@@ -72,7 +72,8 @@ git init
 git commmit -m "initial commit"
 ```
 
-At this point, your app should look *almost exactly* like the code in `/step_one`
+At this point, your app should look *almost exactly* like the code in
+`./app-js-snapshots/App_0.js`.
 
 ## React Basics
 React is based on _components_. A Component encapsulates the _look_ and _behavior_ of some part of your app. They are _reusable_, _composable_, and _declarative_. 
