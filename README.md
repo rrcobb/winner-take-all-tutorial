@@ -842,11 +842,24 @@ class App extends Component {
   }
 }
 ```
+## Wrapping up
 
+The final code for our version of the App is in `src/App.js`. It's still just a jumping off point - there's lots we haven't covered.
 
-## Other things you might want to do with React
-- fetch data from a server
-- animate components
+Challenges: 
+- Handle winning and losing
+- Animate the cards coming in and leaving the game board
+- Let players enter their names
+- Play the game with more than two players
+- Show a history of who's won and lost
+
+## Learning more: Fetch data from a server
+This is the most likely next step for you in the hackathon, if you're working with a sponsor's API or someone on your team is writing a backend server.
+
+- Check out [redux-thunk](https://github.com/gaearon/redux-thunk)
+- See the [Fin blog post](https://www.fin.com/eng-blog/async-helpers-in-redux) on async helpers
+- Check out [redux-saga](https://github.com/redux-saga/redux-sag://github.com/redux-saga/redux-saga) and [redux-observable](https://github.com/redux-observable/redux-observable), if you're into rx 
+- Check out [axios](https://github.com/mzabriskie/axios) or [other js](https://npmcompare.com/compare/axios,got,request,reqwest,superagent)  [http utilities](https://hashnode.com/post/5-best-libraries-for-making-ajax-calls-in-react-cis8x5f7k0jl7th53z68s41k1).
 
 ### Where to turn next?
 - [React docs](https://facebook.github.io/react/docs/hello-world.html)
