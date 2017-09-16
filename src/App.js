@@ -1,102 +1,228 @@
 import React, { Component } from "react";
 import "./App.css";
 import { connect, Provider } from "react-redux";
-import { combineReducers, createStore } from "redux";
+import { createStore } from "redux";
 
-class Scoreboard extends Component {
+/*****************************
+*  Components
+*****************************/
+const faceCards = {
+  11: "J",
+  12: "Q",
+  13: "K",
+  14: "A"
+};
+
+const displayValue = value => faceCards[value] || value;
+
+class Card extends Component {
   render() {
     return (
-      <div className="scoreboard">
-        <h2>{this.props.name}</h2>
-        {this.props.count}
-        {this.props.reveal ? this.props.cards : null}
+      <div className={`card ${this.props.suit}`}>
+        {displayValue(this.props.value)}
       </div>
     );
   }
 }
 
-class Card extends Component {
+class Peek extends Component {
   render() {
-    return <div className={`card ${this.props.suit}`}>{this.props.value}</div>;
+    return (
+      <div className={"peek"}>
+        {this.props.cards.slice(0, 12).map(card => (
+          <div>
+            {displayValue(card.value)} <span className={card.suit} />
+          </div>
+        ))}
+      </div>
+    );
   }
 }
 
 class Deck extends Component {
   render() {
-    return <div className={"deck"} />;
+    return (
+      <div className={"deck-container"}>
+        <Peek cards={this.props.cards} />
+        <div className={"deck"} onClick={this.props.onClick} />
+      </div>
+    );
+  }
+}
+
+class Scoreboard extends Component {
+  render() {
+    let { name, count } = this.props;
+    return (
+      <div className="scoreboard">
+        <h2>{name}</h2>
+        <h3 className={`${count < 15 && "warning"} ${count < 10 && "danger"}`}>
+          {this.props.count}
+        </h3>
+      </div>
+    );
   }
 }
 
 class UnconnectedPlayer extends Component {
   render() {
     return (
-      <div>
-        <Deck />
-        <Card value={this.props.value} suit={"diamond"} />
-        <Scoreboard name={this.props.name} score={this.props.score} />
+      <div className={`player ${this.props.odd ? "right" : "left"}`}>
+        <div className={"cards"}>
+          <Deck
+            onClick={this.props.card ? this.props.resolve : this.props.playCard}
+            cards={this.props.cards}
+          />
+          <div className={"table-spot"}>
+            {this.props.card && (
+              <Card value={this.props.card.value} suit={this.props.card.suit} />
+            )}
+          </div>
+        </div>
+        <Scoreboard name={this.props.name} count={this.props.cards.length} />
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { value: 15, name: "human" };
+  const player = state[ownProps.name];
+  return {
+    cards: player && player.cards,
+    card: player && player.card
+  };
 };
 
-const Player = connect(mapStateToProps)(UnconnectedPlayer);
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    playCard: () => store.dispatch({ type: "PlayCard" }),
+    resolve: () => store.dispatch({ type: "Resolve" })
+  };
+};
+
+const Player = connect(mapStateToProps, mapDispatchToProps)(UnconnectedPlayer);
 
 class Controls extends Component {
   render() {
     return (
-      <div>
-        <button>
-          <h1>New Game!</h1>
-        </button>
-        <button>
-          <h2>Show Cards</h2>
+      <div className={"controls"}>
+        <button onClick={() => store.dispatch({ type: "NewGame" })}>
+          <h1>New Game</h1>
         </button>
       </div>
     );
   }
 }
 
-const randomInteger = () => {
-  return Math.floor(Math.random() * 20) + 1;
+/*****************************
+*   State Management Logic
+*****************************/
+
+// a new deck of 52 cards
+const newDeck = () => {
+  const suits = ["heart", "diamond", "club", "spade"];
+  const values = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+  return suits.reduce(
+    (deck, suit) =>
+      deck.concat(
+        values.map(value => ({
+          suit,
+          value
+        }))
+      ),
+    []
+  );
 };
 
-const name = (state = "", action) => {
-  switch (action.type) {
-    case "ChangeName": {
-      return action.payload.name;
-    }
-    default:
-      return state;
+// https://bost.ocks.org/mike/shuffle/
+const shuffle = array => {
+  var m = array.length,
+    t,
+    i;
+
+  // While there remain elements to shuffle…
+  while (m) {
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+
+    // And swap it with the current element.
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
   }
+
+  return array;
 };
 
-const defaultPlayer = {
-  name: "",
-  cards: []
-};
+const newPlayer = () => ({
+  cards: [],
+  card: null
+});
 
-const player = (state = defaultPlayer, action) => {
-  return state;
-};
+const players = ["Nicole", "Rob", "Jessy", "Anthony"];
+const defaultState = players.reduce((memo, name) => {
+  memo[name] = newPlayer();
+  return memo;
+}, {});
 
-const defaultState = {};
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
     case "NewGame": {
-      return defaultState;
+      const deck = shuffle(newDeck());
+      const handsize = deck.length / players.length;
+      return players.reduce((memo, name, index) => {
+        let cards = deck.slice(handsize * index, handsize * (index + 1));
+        memo[name] = { cards, card: null };
+        return memo;
+      }, {});
     }
     case "PlayCard": {
+      return players.reduce((memo, name) => {
+        let cards = state[name].cards;
+        const card = cards[0];
+        memo[name] = {
+          cards: cards.slice(1),
+          card
+        };
+        return memo;
+      }, {});
+    }
+    case "Resolve": {
+      const sorted = Object.values(state).sort(
+        (a, b) => a.card.value < b.card.value
+      );
+      const winner = sorted[0];
+      const prize = sorted.map(player => player.card);
+      return players.reduce((memo, name) => {
+        let cards = state[name].cards;
+        if (state[name] === winner) {
+          memo[name] = {
+            cards: cards.concat(prize),
+            card: null
+          };
+        } else {
+          memo[name] = {
+            cards,
+            card: null
+          };
+        }
+        return memo;
+      }, {});
     }
     default:
       return state;
   }
 };
 
-const store = createStore(reducer);
+const store = createStore(
+  reducer,
+  // https://github.com/zalmoxisus/redux-devtools-extension
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+
+/*****************************
+* Root App Component
+*****************************/
 
 class App extends Component {
   render() {
@@ -107,8 +233,9 @@ class App extends Component {
             <h1>Winner Takes All!</h1>
           </div>
           <div className="gameboard">
-            <Player name="human" />
-            <Player name="computer" />
+            {players.map((name, index) => (
+              <Player name={name} odd={index % 2 !== 0} />
+            ))}
           </div>
           <Controls />
         </div>

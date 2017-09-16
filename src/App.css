@@ -9,17 +9,38 @@
   color: white;
 }
 
-.App-intro {
-  font-size: large;
+.gameboard {
+  width: 90vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 50px;
+  flex-wrap: wrap;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.player {
+  display: flex;
+  flex-direction: column;
+  min-width: 500px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+}
+
+.deck-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.peek {
+  width: 50px;
+}
+
+.right > .cards,
+.right > .cards > .deck-container {
+  flex-direction: row-reverse;
 }
 
 .card {
@@ -42,6 +63,7 @@
   position: relative;
   background-color: #fff;
 }
+
 .card::before {
   position: absolute;
   top: 10px;
@@ -59,27 +81,27 @@
   color: #f45042;
 }
 .heart::before,
-.heart::after {
+div.heart::after {
   content: "♥";
 }
 
 .diamond::before,
-.diamond::after {
+div.diamond::after {
   content: "♦";
 }
 
 .spade,
-.club {
+div.club {
   color: #1d1e30;
 }
 
 .spade::before,
-.spade::after {
+div.spade::after {
   content: "♠";
 }
 
 .club::before,
-.club::after {
+div.club::after {
   content: "♣";
 }
 
@@ -102,14 +124,13 @@
   -moz-box-shadow: 0.2em 0.2em 0.5em #333;
   -webkit-box-shadow: 0.2em 0.2em 0.5em #333;
   box-shadow: 0.2em 0.2em 0.5em #333;
-}
-
-.scoreboard {
   cursor: pointer;
 }
 
-.gameboard {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+.warning {
+  color: #e45042;
+}
+
+.danger {
+  color: #d40404;
 }
