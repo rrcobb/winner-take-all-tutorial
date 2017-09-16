@@ -14,6 +14,16 @@ git clone https://github.com/rrcobb/winner-take-all-tutorial.git
 ```
 
 - You can pick up at any of steps, in case you get behind or go 'off piste'
+- To pick up at another step, simply copy that step's `App.js` 
+  file into your `src` directory.  For example, if my repo is located in
+  `~/code/wta` and I've cloned this tutorial into
+  `~code/winner-take-all-tutorial`, I can skip to step five like so:
+
+  ```
+  cp ../winner-take-all-tutorial/app-js-snapshots/App_v4.js ~/code/wta/src/App.js
+
+  ```
+
 - If you _have_ got the code working at a particular step, check with the people next to you and see if you can get them unstuck
 - It's worth experimenting a _ton_ with react and redux. 
 
@@ -123,7 +133,7 @@ package.json
 
 `src` is where we will make changes. Lets take a closer look at the files in there.
 
-- `index.js` is the _entrypoint_ to our app - it's where the build will start, and has some oft the plumbing needed to get React to start rendering components on the page.
+- `index.js` is the _entrypoint_ to our app - it's where the build will start, and has some of the plumbing needed to get React to start rendering components on the page.
 - `index.css` has a tiny set of styles that apply to the whole app.
 - `App.js` is our _root React component_
 - `App.test.js` is a test file, in case we wanted to be good developers and write tests for our code (ha! At a hackathon?!?!?)
@@ -157,7 +167,7 @@ class App extends Component {
 export default App;
 ```
 
-When we make a small change and save, we see the change reflected almost instantly in the browser. (It's pretty safe to change the text, event if the rest of the code here is still mysterious)
+When we make a small change and save, we see the change reflected almost instantly in the browser. (It's pretty safe to change the text, even if the rest of the code here is still mysterious)
 
 After my update, my browser shows:
 ![screen shot 2017-09-07 at 7 11 33 pm](https://user-images.githubusercontent.com/3818920/30193157-7e6b0764-9400-11e7-954a-b745fadd3344.png)
@@ -176,7 +186,6 @@ We want to build an online version of the popular kids card game. We want to sho
 - A deck of cards, face down, one for each player
 - A face-up card for each player that changes each round
 - A scoreboard
-- A button to play a card
 - A button to start a new game
 
 What would those look like as components?
@@ -191,7 +200,7 @@ What would those look like as components?
 - Controls
   - NewGameButton
 
-## Creating a component
+## Step 1: Creating a component
 Components encapsulate the logic for the _look_ and _behavior_ of some part of the UI you're building.
 
 Let's start with the Card component. Our component will define a new class, `Card`, that extends the `React.Component` class, and tells React how to render a Card.  
@@ -232,72 +241,9 @@ Save again and you'll see our card component is being rendered.
 
 So, React can render things like `div`s and `img` and `h2` in our components, and it can render components like `Card` that we define with their own display logic.
 
-We can style the card with css - let's add the following to our `App.css`:
-
-```
-/* adapted from github.com/selfthinker/CSS-Playing-Cards */
-.card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 3.3em;
-  height: 4.6em;
-  border: 1px solid #666;
-  border-radius: 0.3em;
-  -moz-border-radius: 0.3em;
-  -webkit-border-radius: 0.3em;
-  -khtml-border-radius: 0.3em;
-  padding: 0.25em;
-  margin: 0 0.5em 0.5em 0;
-  text-align: center;
-  font-size: 3.2em; /* @change: adjust this value to make bigger or smaller cards */
-  font-weight: normal;
-  font-family: Arial, sans-serif;
-  position: relative;
-  background-color: #fff;
-}
-
-.card::before {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-}
-
-.card::after {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-}
-
-.heart,
-.diamond {
-  color: #f45042;
-}
-.heart::before,
-div.heart::after {
-  content: "♥";
-}
-
-.diamond::before,
-div.diamond::after {
-  content: "♦";
-}
-
-.spade,
-div.club {
-  color: #1d1e30;
-}
-
-.spade::before,
-div.spade::after {
-  content: "♠";
-}
-
-.club::before,
-div.club::after {
-  content: "♣";
-}
-```
+Let's make our game look good with some CSS. Copy this repository's
+`src/App.css` file into your repository's `src/App.css`.  When you save, things
+should start looking pretty snappy.
 
 (`create-react-app` has set us up so that the css gets built and included on the page automatically)
 
@@ -511,7 +457,7 @@ Of course, iterating on your own app, you'll write your own component logic and 
 ----------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------
 
-## State management
+## Step 2: State management
 
 Redux
 
