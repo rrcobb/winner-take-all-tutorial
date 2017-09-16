@@ -17,10 +17,10 @@ git clone https://github.com/rrcobb/winner-take-all-tutorial.git
 - To pick up at another step, simply copy that step's `App.js` 
   file into your `src` directory.  For example, if my repo is located in
   `~/code/wta` and I've cloned this tutorial into
-  `~code/winner-take-all-tutorial`, I can skip to step five like so:
+  `~code/winner-take-all-tutorial`, I can skip to step two like so:
 
   ```
-  cp ../winner-take-all-tutorial/app-js-snapshots/App_v4.js ~/code/wta/src/App.js
+  cp ../winner-take-all-tutorial/app-js-snapshots/App_2.js ~/code/wta/src/App.js
 
   ```
 
