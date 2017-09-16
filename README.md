@@ -21,7 +21,6 @@ git clone https://github.com/rrcobb/winner-take-all-tutorial.git
 
   ```
   cp ../winner-take-all-tutorial/app-js-snapshots/App_2.js ~/code/wta/src/App.js
-
   ```
 
 - If you _have_ got the code working at a particular step, check with the people next to you and see if you can get them unstuck
@@ -29,7 +28,12 @@ git clone https://github.com/rrcobb/winner-take-all-tutorial.git
 
 If you follow the steps here, your code should (more or less) match up with the code at each step in this repo.
 
-_Caveat Emptor_: For ease of demonstration, we are not following some best practices that are the norm when developing React/Redux apps. In particular, we aren't splitting code into multiple files. You probably should.
+_Caveat Emptor_: For ease of demonstration and trying to keep the number of new concepts down, we are not following some best practices that are the norm when developing React/Redux apps. In particular:
+- we aren't splitting code into multiple files. Often, the pattern is one file per component, one file per reducer.
+- we aren't writing [function components](https://facebook.github.io/react/docs/components-and-props.html#functional-and-class-components). They'd be awesome for this app.
+- we aren't using [combineReducers](http://redux.js.org/docs/api/combineReducers.html). It's super useful.
+
+You should probably check these out if you are writing more React and Redux. We'd be happy to talk more about them if you find us afterwards.
 
 ## Assumptions:
 - A shell with bash-like commands
@@ -181,7 +185,7 @@ Try making other changes to the render method and see what happens. Can you:
 - Show a different image?
 - Display a random number when the page loads?
 
-## A sketch of Winner-Take-All
+## A Sketch of Winner-Take-All
 
 We want to build an online version of the popular kids card game. We want to show:
 - A deck of cards, face down, one for each player
@@ -556,8 +560,20 @@ class App extends Component {
 
 Now that we've got the plumbing in place, we can start start implementing our game logic with our first reducer. Remember, a reducer is a function that takes in a state and an action and returns the next state given that action.
 
-## Shuffling the Deck
+## A Sketch of Winner-Take-All: Actions and State
+How do we want the app to behave? Just like we did before we wrote our components, we can sketch out the shape of the data we want, the actions that we want to respond to, and how we want to respond to them. 
 
+**State**
+- Players playing the game
+- Pile of cards for each player
+- Current card that each player is playing
+
+**Actions**
+- Start a new game (deal the cards)
+- Play a card
+- Resolve the cards 
+
+## Shuffling the Deck
 ```
 // a new deck of 52 cards
 const newDeck = () => {
@@ -632,10 +648,6 @@ class App extends Component {
   }
 }
 ```
-
------------
-deprecated
-----------
 
 ## Step Three: Writing The Game Logic
 
