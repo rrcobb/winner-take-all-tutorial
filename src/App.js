@@ -64,7 +64,7 @@ class Scoreboard extends Component {
   }
 }
 
-class UnconnectedPlayer extends Component {
+class Player extends Component {
   render() {
     return (
       <div className={`player ${this.props.odd ? "right" : "left"}`}>
@@ -100,7 +100,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   };
 };
 
-const Player = connect(mapStateToProps, mapDispatchToProps)(UnconnectedPlayer);
+const ConnectedPlayer = connect(mapStateToProps, mapDispatchToProps)(Player);
 
 class Controls extends Component {
   render() {
@@ -240,7 +240,7 @@ class App extends Component {
           </div>
           <div className="gameboard">
             {players.map((name, index) => (
-              <Player name={name} odd={index % 2 !== 0} />
+              <ConnectedPlayer name={name} odd={index % 2 !== 0} />
             ))}
           </div>
           <Controls />

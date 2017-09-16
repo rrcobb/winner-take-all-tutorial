@@ -662,17 +662,25 @@ If you open up the redux dev tools, you can watch the state change when you clic
 
 ## Connecting components to the State
 
-Next up, we want the state to be reflected in our app - let's connect a Deck component to the state. 
+We want the state to be reflected in our app, not just in the devtools. let's connect a Deck component to the state to get a glimpse at the cards we're dealing. 
+
+We want our component to get new props every time the state of the redux store updates. Thankfully, there is a helper method that does exactly that. `connect` from react-redux lets us define a function that picks the parts of the store state that we care about and passes them as props to our component every time the store updates.
+
+In this case, the state of the store is our deck of cards, so we want to pass the whole thing into our Deck component.
 
 ```
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return {
     cards: state,
   };
 };
 
 const ConnectedDeck = connect(mapStateToProps)(Deck);
+```
 
+Let's show our `ConnectedDeck` side by side with another `Deck` that uses hard-coded props to illustrate the difference.
+
+```
 class App extends Component {
   render() {
     return (
@@ -691,15 +699,18 @@ class App extends Component {
 }
 ```
 
+Now when we click the button, the `ConnectedDeck` updates with a newly shuffled deck of cards.
+
 ## Step Three: Writing The Game Logic
 
 We now have all the tools we need to implement the rest of this game.  The rules
-for Winner Take All are simple: two players repeatedly draw cards from a deck
-and the card with the higher value wins. 
+for _Winner Take All_ are simple: players draw cards from their deck, and the card with the higher value wins. The winner gets to keep the loser's card, adding it to the bottom of their deck.
 
-Events in our game will be dispatched to the Redux store as redux actions.  They will affect the Redux state in ways that we define in our reducer.  
+Here's the completed game logic. It uses some fancy javascript array methods (`reduce` in particular), but at its heart it's just an implementation of the logic described above.
 
 ```
+const players = ["Nicole", "Rob"];
+
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
     case "NewGame": {
@@ -749,6 +760,89 @@ const reducer = (state = defaultState, action) => {
   }
 };
 ```
+
+We also want to connect this fancy new game state to some components that will display in the view. Introducing, the `Player` component!
+
+```
+class Player extends Component {
+  render() {
+    return (
+      <div className={`player ${this.props.odd ? "right" : "left"}`}>
+        <div className={"cards"}>
+          <Deck
+            onClick={this.props.card ? this.props.resolve : this.props.playCard}
+            cards={this.props.cards}
+          />
+          <div className={"table-spot"}>
+            {this.props.card && (
+              <Card value={this.props.card.value} suit={this.props.card.suit} />
+            )}
+          </div>
+        </div>
+        <Scoreboard name={this.props.name} count={this.props.cards.length} />
+      </div>
+    );
+  }
+}
+```
+
+Each player has a deck, a card that is currently on the game board, and a scoreboard displaying their name and how many cards they have left. In our state, we have a deck for each player - somehow we've got to get the right slice of the state to the right Player component. 
+
+The `mapStateToProps` function that we pass to `connect` gets another argument, `ownProps`. The `mapStateToProps` function will get called with both the `state` from the redux store as well as the `ownProps` - the props that the parent component passes in. We can pass the `'name'` of the player in from the parent, and use that to determine which deck and score to pass to the `Player`.
+
+```
+const mapStateToProps = (state, ownProps) => {
+  const player = state[ownProps.name];
+  return {
+    cards: player && player.cards,
+    card: player && player.card
+  };
+};
+```
+
+Looking again at our `Player`, we've also passed an `onClick` prop to the `Deck` component which will either play a new card, or resolve the cards that are currently in play. `connect` can help us out again here. It in fact takes a second argument, a function `mapDispatchToProps` that gets access to the dispatch function. We can pass in functions to dispatch the `'PlayCard'` and `'Resolve'` actions which the `Player` component can in turn pass to the `Deck`.
+
+```
+const mapDispatchToProps = (dispatch) => {
+  return {
+    playCard: () => dispatch({ type: "PlayCard" }),
+    resolve: () => dispatch({ type: "Resolve" })
+  };
+};
+
+// connect with two arguments
+const ConnectedPlayer = connect(mapStateToProps, mapDispatchToProps)(UnconnectedPlayer);
+```
+
+Finally, rendering a `ConnectedPlayer` component in the app for each player:
+
+```
+class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <div className="App">
+          <div className="App-header">
+            <h2>Winner Takes All</h2>
+            <small>
+              <a href="https://github.com/rrcobb/winner-take-all-tutorial">
+                (♥ Fin)
+              </a>
+            </small>
+          </div>
+          <div className="gameboard">
+            {players.map((name, index) => (
+              <ConnectedPlayer name={name} odd={index % 2 !== 0} />
+            ))}
+          </div>
+          <Controls />
+        </div>
+      </Provider>
+    );
+  }
+}
+```
+
 
 ## Other things you might want to do with React
 - fetch data from a server
