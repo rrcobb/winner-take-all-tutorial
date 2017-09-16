@@ -457,13 +457,7 @@ class App extends Component {
 
 Of course, iterating on your own app, you'll write your own component logic and css and figure out how to get what you want to show up on the page.
 
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-                                          Todo
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-
-## State management
+## Step 2: State management with Redux
 Hard-coding our props has let us express a static site succinctly, but so far we haven't seen anything other than fancy templating. The true power of React shows when our components update dynamically  based on interactions with the user.
 
 React has [built-in functions](https://facebook.github.io/react/docs/state-and-lifecycle.html) for managing state within a component. We're going to skip over that today for the sake of time, but it's worth reading on your own. 
@@ -702,7 +696,7 @@ class App extends Component {
 
 Now when we click the button, the `ConnectedDeck` updates with a newly shuffled deck of cards.
 
-## Step Three: Writing The Game Logic
+## Step 3: Writing The Game Logic
 
 We now have all the tools we need to implement the rest of this game.  The rules
 for _Winner Take All_ are simple: players draw cards from their deck, and the card with the higher value wins. The winner gets to keep the loser's card, adding it to the bottom of their deck.
