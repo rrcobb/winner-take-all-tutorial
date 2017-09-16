@@ -200,8 +200,8 @@ Let's start with the Card component. Our component will define a new class, `Car
 class Card extends Component {
   render () {
     return (
-      <div className="card">
-        It's a card!
+      <div className="card spade">
+        A
       </div>
     )
   }
@@ -308,12 +308,13 @@ If you want something to happen at those different points, you can define those 
 
 ### Render
 The `render` function on a React component instance returns a representation of the
-tree of elements that React will render onto the DOM. `Card.js` defines exactly zero
-functions right now, so let's change that:
+tree of elements that React will render onto the DOM. 
+
+When we return a tree of elements from the render method, React does the tricky work of diffing the full tree against last version of the tree it rendered and updating the DOM.
 
 To get this game of `Winner Take All` off the ground, we'll need some slightly
-more dynamic cards. We can have the `Card` component render whatever value we
-want by passing it as a `prop`.
+more dynamic cards. Let's start by having the `Card` component render different values
+based on what we pass it as a `prop`.
 
 ## Props - changing how a component behaves
 We've seen how components render other components. So far, though, it's pretty boring - a little bit easier than copy / pasting the same `div`, but not _that_ much easier. 
@@ -436,7 +437,7 @@ class Deck extends Component {
     return (
       <div className={"deck-container"}>
         <Peek cards={this.props.cards} />
-        <div className={"deck"} onClick={this.props.onClick} />
+        <div className={"deck"} />
       </div>
     );
   }
@@ -472,10 +473,31 @@ class Controls extends Component {
 And, displaying them in the app: 
 
 ```
-
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Winner Takes All</h2>
+        </div>
+        <Card value={3} suit="spade"/>
+        <Card value={4} suit="club" />
+        <Card value={11} suit="heart" />
+        <Card value={14} suit="diamond" />
+      </div>
+    )
+  }
+}
 ```
 
 Of course, iterating on your own app, you'll write your own component logic and css and figure out how to get what you want to show up on the page.
+
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+                                          Todo
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
 
 ## State management
 
@@ -484,6 +506,13 @@ Redux
 ```
 yarn add redux react-redux
 ```
+
+
+
+
+
+
+
 
 
 ## Adding some State
@@ -642,17 +671,17 @@ components (once we use the `connect` function to hook them into the store).
 
 
 ```
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import Card from './Card.js';
-import Scoreboard from './Scoreboard.js'
-import './App.css';
-import { combineReducers, createStore } from 'redux';
-import { scoreReducer } from './ScoreReducer.js';
-import { Provider } from 'react-redux';
+import React, { Component } from "react";
+import "./App.css";
+import { connect, Provider } from "react-redux";
+import { createStore } from "redux";
 
 const reducer = combineReducers({ score: scoreReducer });
-const store = createStore(reducer);
+const store = createStore(
+  reducer,
+  // https://github.com/zalmoxisus/redux-devtools-extension
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 class App extends Component {
   render() {
@@ -660,7 +689,6 @@ class App extends Component {
       <Provider store={store}>
         <div className="App">
           <div className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
             <h2>Winner Takes All</h2>
           </div>
           <Card value={3} />
@@ -738,13 +766,12 @@ When you save, you should see that your card now renders
 with the additional store value, which is 0.  (If you're not sure why it's 0, raise your hand and ask, or
 grab a mentor.)
 
-
 Let's let Scoreboard stop managing its own state altogether.  Rather than
 incrementing the value in its own state, we can `dispatch` the `incrementScore`
-value to the Redux store, instead.  In order to do so, we need to provide a
+action to the Redux store, instead.  In order to do so, we need to provide a
 `prop` to the `Scoreboard`.
 
-React-redux's `connect` function takes a second argument, the `dispatch`, that
+React-redux's `connect` function takes a second argument, the `mapStateToDispatch` function, that
 allows us to do just that.
 
 ```
@@ -806,6 +833,56 @@ Events in our game will be dispatched to the Redux store as redux actions,
 similar to `INCREMENT_VALUE`.  They will affect the Redux state in ways that we
 define through additional reducers.  
 
+```
+const reducer = (state = defaultState, action) => {
+  switch (action.type) {
+    case "NewGame": {
+      const deck = shuffle(newDeck());
+      const handsize = deck.length / players.length;
+      return players.reduce((memo, name, index) => {
+        let cards = deck.slice(handsize * index, handsize * (index + 1));
+        memo[name] = { cards, card: null };
+        return memo;
+      }, {});
+    }
+    case "PlayCard": {
+      return players.reduce((memo, name) => {
+        let cards = state[name].cards;
+        const card = cards[0];
+        memo[name] = {
+          cards: cards.slice(1),
+          card
+        };
+        return memo;
+      }, {});
+    }
+    case "Resolve": {
+      const sorted = Object.values(state).sort(
+        (a, b) => a.card.value < b.card.value
+      );
+      const winner = sorted[0];
+      const prize = sorted.map(player => player.card);
+      return players.reduce((memo, name) => {
+        let cards = state[name].cards;
+        if (state[name] === winner) {
+          memo[name] = {
+            cards: cards.concat(prize),
+            card: null
+          };
+        } else {
+          memo[name] = {
+            cards,
+            card: null
+          };
+        }
+        return memo;
+      }, {});
+    }
+    default:
+      return state;
+  }
+};
+```
 
 ## Other things you might want to do with React
 - fetch data from a server
