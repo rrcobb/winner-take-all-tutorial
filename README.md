@@ -513,7 +513,9 @@ takes in a current state and an action and returns the next state given that
 action.
 
 ## Actions and Reducers
-Redux actions are javascript objects with a string `type` attribute, and optionally other data. Some actions might look like:
+
+Redux *Actions* are javascript objects with a string `type` attribute, and optionally other data. Some actions might look like:
+
 ```
 // new game action
 { type: 'NewGame' }
@@ -525,14 +527,35 @@ Redux actions are javascript objects with a string `type` attribute, and optiona
 { type: 'UpdateScore', scores: { 'Nicole': 10, 'Rob': 0 }}
 
 // data-fetch resolve action 
-{ type: 'LoadedUser', data: {id: 2345224654, status: 'paid', username: 'zorro546', }}
+{ type: 'LoadedUser', data: {id: 2345224654, status: 'paid', username: 'zorro546', posts: [{id: 54123654, message: 'Lorem Ipsum dolor sit amet...'}]}}
 ```
 
 Frequently there will be additional information that needs to be passed along to
-reducers and placed in the Redux state; this is often keyed under a `data`
-attribute.  Since we're doing a simple increment here, though, simply defining
-the type is sufficient to give our reducer the information needed to alter the
-state of the store.
+reducers and placed in the Redux state; this is often keyed under a `payload`
+attribute. You can read more about best practices for standard actions [here](https://github.com/acdlite/flux-standard-action)
+
+*Reducers* are functions that define how the application state changes in response to an action.
+
+A simple reducer might look like:
+```
+function reducer(state, action) {
+  switch (action.type) {
+    case "IncrementCounter":
+      return state + 1;
+    case "DecrementCounter":
+      return state - 1;
+    default:
+      return state;
+  }
+}
+```
+
+## The NewGame Action
+
+---- 
+fill in with description of new game action / reducer
+----
+
 -----------
 deprecated
 ----------
