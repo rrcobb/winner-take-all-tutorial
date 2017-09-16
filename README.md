@@ -208,6 +208,29 @@ What would those look like as components?
 ## Step 1: Creating a component
 Components encapsulate the logic for the _look_ and _behavior_ of some part of the UI you're building.
 
+### Lifecycle methods
+React components can define several [lifecycle methods](https://facebook.github.io/react/docs/react-component.html) which are called at points such as *mounting*, *receiving props*, and *rendering*.
+
+If you want something to happen at those different points, you can define those methods to hook into those different moments in the life of a component.
+
+### Render
+The `render` function on a React component instance returns a representation of the
+tree of elements that React will render onto the DOM. 
+
+When we return a tree of elements from the render method, React does the tricky work of diffing the full tree against last version of the tree it rendered and updating the DOM.
+
+To get this game of `Winner Take All` off the ground, we'll need some slightly
+more dynamic cards. Let's start by having the `Card` component render different values
+based on what we pass it as a `prop`.
+
+## JSX
+- Looks like html
+- Javascript expressions in `{}` braces get evaluated and rendered
+- Components nest
+- Props
+- Children 
+
+
 Let's start with the Card component. Our component will define a new class, `Card`, that extends the `React.Component` class, and tells React how to render a Card.  
 
 ```
@@ -251,28 +274,6 @@ Let's make our game look good with some CSS. Copy this repository's
 should start looking pretty snappy.
 
 (`create-react-app` has set us up so that the css gets built and included on the page automatically)
-
-### Lifecycle methods
-React components can define several [lifecycle methods](https://facebook.github.io/react/docs/react-component.html) which are called at points such as *mounting*, *receiving props*, and *rendering*.
-
-If you want something to happen at those different points, you can define those methods to hook into those different moments in the life of a component.
-
-### Render
-The `render` function on a React component instance returns a representation of the
-tree of elements that React will render onto the DOM. 
-
-When we return a tree of elements from the render method, React does the tricky work of diffing the full tree against last version of the tree it rendered and updating the DOM.
-
-To get this game of `Winner Take All` off the ground, we'll need some slightly
-more dynamic cards. Let's start by having the `Card` component render different values
-based on what we pass it as a `prop`.
-
-## JSX
-- Looks like html
-- Javascript expressions in `{}` braces get evaluated and rendered
-- Components nest
-- Props
-- Children 
 
 ## Props - changing how a component behaves
 We've seen how components render other components. So far, though, it's pretty boring - a little bit easier than copy / pasting the same `div`, but not _that_ much easier. 
