@@ -121,7 +121,6 @@ package.json
 
 `src` is where we will make changes. Lets take a closer look at the files in there.
 
-
 - `index.js` is the _entrypoint_ to our app - it's where the build will start, and has some oft the plumbing needed to get React to start rendering components on the page.
 - `index.css` has a tiny set of styles that apply to the whole app.
 - `App.js` is our _root React component_
@@ -162,6 +161,7 @@ After my update, my browser shows:
 ![screen shot 2017-09-07 at 7 11 33 pm](https://user-images.githubusercontent.com/3818920/30193157-7e6b0764-9400-11e7-954a-b745fadd3344.png)
 
 Try making other changes to the render method and see what happens. Can you:
+
 - Change what the text says?
 - Change the style of the text? (there are lots of ways to do this - try to find more than one!)
 - Show a link?
@@ -191,11 +191,13 @@ Let's start with the Card component. Our component will define a new class, `Car
 
 ```
 class Card extends Component {
-  return (
+  render () {
+    return (
       <div className="card">
         It's a card!
       </div>
     )
+  }
 }
 ```
 
@@ -204,6 +206,8 @@ Save the file and see that.. nothing happens, because we haven't yet rendered th
 Let's change the render method of the App component so it uses our `Card`
 
 ```
+class App extends Component {
+  render() {
     return (
       <div className="App">
         <div className="App-header">
@@ -212,7 +216,9 @@ Let's change the render method of the App component so it uses our `Card`
         </div>
         <Card />
       </div>
-
+    )
+  }
+}
 ```
 
 Save again and you'll see our card component is being rendered.
@@ -248,7 +254,10 @@ We can style the card with css - let's add the following to our `App.css`:
 
 (`create-react-app` has set us up so that the css gets built and included on the page automatically)
 
+### Lifecycle methods
 React components can define several [lifecycle methods](https://facebook.github.io/react/docs/react-component.html) which are called at points such as *mounting*, *receiving props*, and *rendering*.
+
+If you want something to happen at those different points, you can define those methods to hook into those different moments in the life of a component.
 
 ### Render
 The `render` function on a React component instance returns a representation of the
@@ -259,19 +268,38 @@ To get this game of `Winner Take All` off the ground, we'll need some slightly
 more dynamic cards. We can have the `Card` component render whatever value we
 want by passing it as a `prop`.
 
-## Props
-Components render other components. Props are information passed to a component
-by its parent. We can pass a `value` prop to Card like so:
+## Props - changing how a component behaves
+We've seen how components render other components. So far, though, it's pretty boring - a little bit easier than copy / pasting the same `div`, but not _that_ much easier. 
 
 ```
+class App extends Component {
+  render() {
     return (
       <div className="App">
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Winner Takes All</h2>
         </div>
-        <Card value={3} />
+        <Card />
+        <Card />
+        <Card />
+        <Card />
       </div>
+    )
+  }
+}
+```
+
+`Props` let us change a component's behavior. You can think of them as the parameters passed to a function. (In fact, React lets us define components as functions, which you can read more about [here](https://facebook.github.io/react/docs/components-and-props.html))
+
+They are information passed to a component by its parent.
+
+Let's see how this works in practice.
+
+We can pass a `value` prop to Card like so:
+
+```
+  <Card value={3} />
 ```
 
 Now, the `value` passed by App will be available on the rendered instance of
@@ -293,7 +321,30 @@ class Card extends Component {
 
 Save the file, and our card is now a 3.
 
-## Step Three: Adding some State
+Let's update the App component to render different values on our cards.
+
+```
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Winner Takes All</h2>
+        </div>
+        <Card value={3} />
+        <Card value={4} />
+        <Card value={6} />
+        <Card value={"Q <3"} />
+      </div>
+    )
+  }
+}
+```
+
+We're starting to see how we can reuse a component with slightly different behavior in different places.
+
+## Adding some State
 State is how React components manage data that is 1) relevant to rendering, 
 2) will change during the life of the component, 3) in response to actions taken on
 the component.  While components receive props from their parent, they manage
@@ -617,7 +668,6 @@ define through additional reducers.
 ## Other things you might want to do with React
 - fetch data from a server
 - animate components
-- 
 
 ### Where to turn next?
 - [React docs](https://facebook.github.io/react/docs/hello-world.html)
@@ -641,4 +691,3 @@ If you want to use React for Mobile or VR
 If you want to learn more about Fin
 - [Fin](https://www.fin.com/)
 - [/Jobs](https://www.fin.com/jobs)
-
