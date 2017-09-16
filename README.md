@@ -316,6 +316,13 @@ To get this game of `Winner Take All` off the ground, we'll need some slightly
 more dynamic cards. Let's start by having the `Card` component render different values
 based on what we pass it as a `prop`.
 
+## JSX
+- Looks like html
+- Javascript expressions in `{}` braces get evaluated and rendered
+- Components nest
+- Props
+- Children 
+
 ## Props - changing how a component behaves
 We've seen how components render other components. So far, though, it's pretty boring - a little bit easier than copy / pasting the same `div`, but not _that_ much easier. 
 
@@ -485,6 +492,11 @@ class App extends Component {
         <Card value={4} suit="club" />
         <Card value={11} suit="heart" />
         <Card value={14} suit="diamond" />
+        <Deck cards={[]}>
+        <Deck cards={[{value: 5, suit: "heart"}, {value: 12, suit: "diamond"}]}>
+        <Scoreboard count={4} name={"Rob"}>
+        <Scoreboard count={7} name={"Nicole"}>
+        <Controls />
       </div>
     )
   }
@@ -502,6 +514,12 @@ Of course, iterating on your own app, you'll write your own component logic and 
 ## State management
 
 Redux
+
+What is Redux?
+Share state throughout the application
+Describe how the state changes in response to the different things that can happen
+Pure functions
+
 
 ```
 yarn add redux react-redux
