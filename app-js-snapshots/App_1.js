@@ -1,6 +1,5 @@
-// TODO This code represents our Winner Takes All game after completing Step 2 of the tutorial
+// This code represents our Winner Takes All game after completing Step 1 of the tutorial
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
@@ -8,13 +7,17 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h2>Winner Takes All</h2>
         </div>
-        <Card value={3} />
-        <Card value={4} />
-        <Card value={6} />
-        <Card value={'Q <3'} />
+        <Card value={3} suit="spade" />
+        <Card value={4} suit="club" />
+        <Card value={11} suit="heart" />
+        <Card value={14} suit="diamond" />
+        <Deck cards={[]} />
+        <Deck cards={[{ value: 5, suit: 'heart' }, { value: 12, suit: 'diamond' }]} />
+        <Scoreboard count={4} name={'Rob'} />
+        <Scoreboard count={7} name={'Nicole'} />
+        <Controls />
       </div>
     );
   }

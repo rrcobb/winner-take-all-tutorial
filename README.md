@@ -438,10 +438,10 @@ class App extends Component {
         <Card value={4} suit="club" />
         <Card value={11} suit="heart" />
         <Card value={14} suit="diamond" />
-        <Deck cards={[]}>
-        <Deck cards={[{value: 5, suit: "heart"}, {value: 12, suit: "diamond"}]}>
-        <Scoreboard count={4} name={"Rob"}>
-        <Scoreboard count={7} name={"Nicole"}>
+        <Deck cards={[]}/>
+        <Deck cards={[{value: 5, suit: "heart"}, {value: 12, suit: "diamond"}]}/>
+        <Scoreboard count={4} name={"Rob"}/>
+        <Scoreboard count={7} name={"Nicole"}/>
         <Controls />
       </div>
     )
