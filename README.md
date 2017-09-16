@@ -70,7 +70,7 @@ React is based on _components_. A Component encapsulates the _look_ and _behavio
 - Native
 - VR
 
-There are also lots of other popular new component frameworks - [Vue](https://vuejs.org/), [Riot](http://riotjs.com/), [Polymer](https://www.polymer-project.org/), (even [Angular](https://angular.io/) is more and more component-oriented). They have important differences in their interfaces, but they share the core idea of being able to move from a _sketch of the things you want on the page_ to _working components_ quickly and easily.
+There are also lots of other popular new component frameworks, like [Vue](https://vuejs.org/), [Riot](http://riotjs.com/), [Polymer](https://www.polymer-project.org/), and [Angular](https://angular.io/). They have important differences, but they share the core idea of being able to move from a _sketch of a page_ to _working components_ quickly and easily.
 
 We'll focus on thinking in components, and you can take that pattern with you and use it in whatever framework you like.
 
@@ -122,12 +122,12 @@ package.json
 `src` is where we will make changes. Lets take a closer look at the files in there.
 
 
-`index.js` is the _entrypoint_ to our app - it's where the build will start, and has some oft the plumbing needed to get React to start rendering components on the page.
-`index.css` has a tiny set of styles that apply to the whole app.
-`App.js` is our _root React component_
-`App.test.js` is a test file, in case we wanted to be good developers and write tests for our code (ha! At a hackathon?!?!?)
-`App.css` is where we will put the styles for our app
-`registerServiceWorker.js` handles registering a _Service Worker_. This is the basis for building a [Progressive Web App](https://goo.gl/KwvDNy) that works offline as well as on. 
+- `index.js` is the _entrypoint_ to our app - it's where the build will start, and has some oft the plumbing needed to get React to start rendering components on the page.
+- `index.css` has a tiny set of styles that apply to the whole app.
+- `App.js` is our _root React component_
+- `App.test.js` is a test file, in case we wanted to be good developers and write tests for our code (ha! At a hackathon?!?!?)
+- `App.css` is where we will put the styles for our app
+- `registerServiceWorker.js` handles registering a _Service Worker_. This is the basis for building a [Progressive Web App](https://goo.gl/KwvDNy) that works offline as well as on. 
 
 We'll mostly be working inside of `App.js`, so let's open it up in a code editor and start experimenting!
 
@@ -177,31 +177,54 @@ We want to build an online version of the popular kids card game. We want to sho
 - A button to play a card
 - A button to start a new game
 
+Translating those into components, we get
+- Card
+- Deck
+- ScoreBoard
+- PlayButton
+- NewGameButton
 
+## Creating a component
+Components encapsulate the logic for the _look_ and _behavior_ of some part of the UI you're building.
 
-## Create your first component
-We're building a card game, so we'll want a way to display an individual card.
-Create a new file in the `src` folder called `Card.js`. 
-
-Our component in `Card.js` will define and export a new class, `Card`, that extends the
-`React.Component` class.  
+Let's start with the Card component. Our component will define a new class, `Card`, that extends the `React.Component` class, and tells React how to render a Card.  
 
 ```
-import React, { Component } from 'react';
-import './Card.css';
-
 class Card extends Component {
+  return (
+      <div className="card">
+        It's a card!
+      </div>
+    )
 }
+```
 
-export default Card;
+Save the file and see that.. nothing happens, because we haven't yet rendered the Card component anywhere.
+
+Let's change the render method of the App component so it uses our `Card`
 
 ```
-Let's create a `Card.css` file and define the following style:
+    return (
+      <div className="App">
+        <div className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h2>Winner Takes All</h2>
+        </div>
+        <Card />
+      </div>
+
+```
+
+Save again and you'll see our card component is being rendered.
+
+So, React can render things like `div`s and `img` and `h2` in our components, and it can render components like `Card` that we define with their own display logic.
+
+We can style the card with css - let's add the following to our `App.css`:
 
 ```
 /* adapted from github.com/selfthinker/CSS-Playing-Cards */
 .card {
-display: inline-block;
+    display: inline-block;
     width: 3.3em;
     height: 4.6em;
     border: 1px solid #666;
@@ -223,52 +246,20 @@ display: inline-block;
 }
 ```
 
-React components can define several [lifecycle
-methods](https://facebook.github.io/react/docs/react-component.html) which are
-called at points such as *mounting*, *receiving props*, and *rendering*.
+(`create-react-app` has set us up so that the css gets built and included on the page automatically)
 
+React components can define several [lifecycle methods](https://facebook.github.io/react/docs/react-component.html) which are called at points such as *mounting*, *receiving props*, and *rendering*.
 
 ### Render
 The `render` function on a React component instance returns a representation of the
 tree of elements that React will render onto the DOM. `Card.js` defines exactly zero
 functions right now, so let's change that:
 
-```
-class Card extends Component {
-  render() {
-    return (
-      <div className="card">
-        It's a card!
-      </div>
-    )
-  }
-}
-```
-
-Save the file and see that.. nothing happens, because we haven't yet rendered a
-Card component anywhere.
-
-Let's do so in `App.js`:
-
-```
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Winner Takes All</h2>
-        </div>
-        <Card />
-      </div>
-
-```
-
-Save again and you'll see our card component is being rendered.
-
 To get this game of `Winner Take All` off the ground, we'll need some slightly
 more dynamic cards. We can have the `Card` component render whatever value we
 want by passing it as a `prop`.
 
-### Props
+## Props
 Components render other components. Props are information passed to a component
 by its parent. We can pass a `value` prop to Card like so:
 
