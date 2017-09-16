@@ -380,7 +380,7 @@ class Peek extends Component {
   render() {
     return (
       <div className={"peek"}>
-        {this.props.cards.slice(0, 12).map(card => (
+        {this.props.cards.slice(0, this.props.count).map(card => (
           <div>
             {displayValue(card.value)} <span className={card.suit} />
           </div>
@@ -394,7 +394,7 @@ class Deck extends Component {
   render() {
     return (
       <div className={"deck-container"}>
-        <Peek cards={this.props.cards} />
+        <Peek cards={this.props.cards} count={12} />
         <div className={"deck"} />
       </div>
     );
@@ -571,9 +571,12 @@ How do we want the app to behave? Just like we did before we wrote our component
 **Actions**
 - Start a new game (deal the cards)
 - Play a card
-- Resolve the cards 
+- Resolve the cards in play (give the cards to the player who had the highest card)
 
 ## Shuffling the Deck
+
+Let's start at the beginning - creating a new deck of cards. (Next we can deal it out to players)
+
 ```
 // a new deck of 52 cards
 const newDeck = () => {
@@ -592,6 +595,14 @@ const newDeck = () => {
   );
 };
 
+```
+
+
+We'll also need a function for shuffling our deck, so that the game is fair (and at least a little interesting).
+
+```
+// Shuffle an array (like our deck of cards)
+// Borrowed from an awesome blog post about js array shuffling:
 // https://bost.ocks.org/mike/shuffle/
 const shuffle = array => {
   var m = array.length,
@@ -611,7 +622,12 @@ const shuffle = array => {
 
   return array;
 };
+```
 
+Let's hook up our cool functions to our reducer. When we see an action with the type `'NewGame'`, we'll create and shuffle a new deck. For now, the deck is the whole state of the app, so we'll just return it from the reducer.
+
+```
+// redux doesn't like it when a reducer returns `undefined`, so we set a default value.
 const defaultState = [];
 
 const reducer = (state = defaultState, action) => {
@@ -624,12 +640,38 @@ const reducer = (state = defaultState, action) => {
       return state;
   }
 };
+```
 
-const store = createStore(
-  reducer,
-  // https://github.com/zalmoxisus/redux-devtools-extension
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+Let's hook up our button so that it dispatches the `'NewGame'` action. We call `store.dispatch` to send the action to the store. Redux will use the reducer we've defined to update the state.
+
+```
+class Controls extends Component {
+  render() {
+    return (
+      <div className={"controls"}>
+        <button onClick={() => store.dispatch({ type: "NewGame" })}>
+          <h1>New Game</h1>
+        </button>
+      </div>
+    );
+  }
+}
+```
+
+If you open up the redux dev tools, you can watch the state change when you click the button. How thrilling!
+
+## Connecting components to the State
+
+Next up, we want the state to be reflected in our app - let's connect a Deck component to the state. 
+
+```
+const mapStateToProps = (state, ownProps) => {
+  return {
+    cards: state,
+  };
+};
+
+const ConnectedDeck = connect(mapStateToProps)(Deck);
 
 class App extends Component {
   render() {
