@@ -457,27 +457,85 @@ Of course, iterating on your own app, you'll write your own component logic and 
 ----------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------
 
-## Step 2: State management
+## State management
+Hard-coding our props has let us express a static site succinctly, but so far we haven't seen anything other than fancy templating. The true power of React shows when our components update dynamically  based on interactions with the user.
 
-Redux
+React has [built-in functions](https://facebook.github.io/react/docs/state-and-lifecycle.html) for managing state within a component. We're going to skip over that today for the sake of time, but it's worth reading on your own. 
 
-What is Redux?
-Share state throughout the application
-Describe how the state changes in response to the different things that can happen
-Pure functions
+We're going to skip right to the solution without taking the time to illustrate the problem. We're asking that you take it on faith that when your app's logic is complex enough, it becomes worth it to use other strategies for managing state.
 
+## What is Redux?
+- Popular js state management library
+- Lets you share state throughout your application
+- Just like React lets you describe how components should behave, redux lets you describe how your application state changes in response to the different things that can happen
+- Pure functions, w/o side effects
+- Makes it easier to reason about state changes
 
+[Redux](http://redux.js.org/) provides a *store* which holds the current state of the entire app. We dispatch *actions* to the store, and *reducers* define how the state should change in response to those actions.
+
+[React-redux](https://github.com/reactjs/react-redux) gives us helper methods (called _bindings_ in the docs) to connect our redux store to our react components. They pass data props from the store's into components, and pass functions into components that let those components dispatch actions to the store.
+
+## Getting redux up and running
 ```
 yarn add redux react-redux
 ```
 
+In App.js, import the libraries we need and set up the plumbing.
 
+``` 
+import { connect, Provider } from "react-redux";
+import { createStore } from "redux";
 
+const reducer = (state = {}, action) => state
+const store = createStore(
+  reducer,
+  // https://github.com/zalmoxisus/redux-devtools-extension
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
+class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <div className="App">
+          <div className="App-header">
+            <h2>Winner Takes All</h2>
+          </div>
+        </div>
+      </Provider>
+    );
+  }
+}
+```
 
+We'll start with writing a reducer, which is simply a function that
+takes in a current state and an action and returns the next state given that
+action.
 
+## Actions and Reducers
+Redux actions are javascript objects with a string `type` attribute, and optionally other data. Some actions might look like:
+```
+// new game action
+{ type: 'NewGame' }
 
+// play card action
+{ type: 'PlayCard' }
 
+// update scoreboard action
+{ type: 'UpdateScore', scores: { 'Nicole': 10, 'Rob': 0 }}
+
+// data-fetch resolve action 
+{ type: 'LoadedUser', data: {id: 2345224654, status: 'paid', username: 'zorro546', }}
+```
+
+Frequently there will be additional information that needs to be passed along to
+reducers and placed in the Redux state; this is often keyed under a `data`
+attribute.  Since we're doing a simple increment here, though, simply defining
+the type is sufficient to give our reducer the information needed to alter the
+state of the store.
+-----------
+deprecated
+----------
 
 ## Adding some State
 State is how React components manage data that is 1) relevant to rendering, 
@@ -559,8 +617,6 @@ change in response to those actions.
 Let's stop storing our scoreboard's value in the component's state and switch to
 managing it through the Redux store.
 
-
-
 We'll start with writing a reducer, which is simply a function that
 takes in a current state and an action and returns the next state given that
 action. Create a new file, `src/ScoreReducer.js`.
@@ -571,7 +627,6 @@ constant:
 
 
 ```
-const INCREMENT_VALUE = 'IncrementValue'
 export const incrementValue = { type: INCREMENT_VALUE }
 ```
 
