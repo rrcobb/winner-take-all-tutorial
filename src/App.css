@@ -1,12 +1,23 @@
 .App {
+  font-family: Courier New, Courier, monospace;
   text-align: center;
 }
 
 .App-header {
-  background-color: #222;
+  background-color: #0688fa;
   height: 70px;
   padding: 20px;
   color: white;
+}
+
+.App-header > small > a {
+  color: white;
+  text-decoration: none;
+}
+
+.App-header > small > a:hover {
+  color: cyan;
+  text-decoration: underline;
 }
 
 .gameboard {
@@ -15,6 +26,7 @@
   flex-direction: row;
   justify-content: space-between;
   margin: 50px;
+  margin-bottom: 0;
   flex-wrap: wrap;
 }
 
@@ -133,4 +145,28 @@ div.club::after {
 
 .danger {
   color: #d40404;
+}
+
+button {
+  box-shadow: inset 0px -3px 7px 0px #2b8aff;
+  background-color: #0688fa;
+  border-radius: 6px;
+  border: 1px solid #0b0e07;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: Courier New;
+  padding: 4px 16px;
+  margin: 8px;
+  text-decoration: none;
+  text-shadow: 0px 1px 0px #263666;
+}
+
+button:hover {
+  background-color: #2e78f7;
+}
+
+button:active {
+  position: relative;
+  top: 1px;
 }

@@ -179,18 +179,16 @@ We want to build an online version of the popular kids card game. We want to sho
 - A button to play a card
 - A button to start a new game
 
-Set names
-Keep historical record of games
-
+What would those look like as components?
 - Player
   - Name
   - Deck
-    - Running count of cards
     - 'Peek' cards in the deck
   - Card
 - ScoreBoard
+  - Player name
+  - Running count of cards
 - Controls
-  - PlayButton
   - NewGameButton
 
 ## Creating a component
@@ -239,25 +237,65 @@ We can style the card with css - let's add the following to our `App.css`:
 ```
 /* adapted from github.com/selfthinker/CSS-Playing-Cards */
 .card {
-    display: inline-block;
-    width: 3.3em;
-    height: 4.6em;
-    border: 1px solid #666;
-    border-radius: .3em;
-    -moz-border-radius: .3em;
-    -webkit-border-radius: .3em;
-    -khtml-border-radius: .3em;
-    padding: .25em;
-    margin: 0 .5em .5em 0;
-    text-align: center;
-    font-size: 3.2em; /* @change: adjust this value to make bigger or smaller cards */
-    font-weight: normal;
-    font-family: Arial, sans-serif;
-    position: relative;
-    background-color: #fff;
-    -moz-box-shadow: .2em .2em .5em #333;
-    -webkit-box-shadow: .2em .2em .5em #333;
-    box-shadow: .2em .2em .5em #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.3em;
+  height: 4.6em;
+  border: 1px solid #666;
+  border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+  -khtml-border-radius: 0.3em;
+  padding: 0.25em;
+  margin: 0 0.5em 0.5em 0;
+  text-align: center;
+  font-size: 3.2em; /* @change: adjust this value to make bigger or smaller cards */
+  font-weight: normal;
+  font-family: Arial, sans-serif;
+  position: relative;
+  background-color: #fff;
+}
+
+.card::before {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.card::after {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.heart,
+.diamond {
+  color: #f45042;
+}
+.heart::before,
+div.heart::after {
+  content: "♥";
+}
+
+.diamond::before,
+div.diamond::after {
+  content: "♦";
+}
+
+.spade,
+div.club {
+  color: #1d1e30;
+}
+
+.spade::before,
+div.spade::after {
+  content: "♠";
+}
+
+.club::before,
+div.club::after {
+  content: "♣";
 }
 ```
 
@@ -351,53 +389,94 @@ class App extends Component {
 }
 ```
 
+Challenges: 
+- How would you give the card a different look based on it's suit?
+- How could you get a card with value `11` to display as `J`? (`12` to `Q`, `13` to `K`, `14` to `A`?)
+
 We're starting to see how we can reuse a component with slightly different behavior in different places.
 
 Let's add sketched-out versions of the other components we want.
 
 ```
+const faceCards = {
+  11: "J",
+  12: "Q",
+  13: "K",
+  14: "A"
+};
+
+const displayValue = value => faceCards[value] || value;
+
+class Card extends Component {
+  render() {
+    return (
+      <div className={`card ${this.props.suit}`}>
+        {displayValue(this.props.value)}
+      </div>
+    );
+  }
+}
+
+class Peek extends Component {
+  render() {
+    return (
+      <div className={"peek"}>
+        {this.props.cards.slice(0, 12).map(card => (
+          <div>
+            {displayValue(card.value)} <span className={card.suit} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+
+class Deck extends Component {
+  render() {
+    return (
+      <div className={"deck-container"}>
+        <Peek cards={this.props.cards} />
+        <div className={"deck"} onClick={this.props.onClick} />
+      </div>
+    );
+  }
+}
+
 class Scoreboard extends Component {
   render() {
+    let { name, count } = this.props;
     return (
-        <div className="scoreboard">
-          <h1>Your score:</h1>
-          {this.state.value}
-        </div>
-        )
+      <div className="scoreboard">
+        <h2>{name}</h2>
+        <h3 className={`${count < 15 && "warning"} ${count < 10 && "danger"}`}>
+          {this.props.count}
+        </h3>
+      </div>
+    );
   }
 }
-```
 
-```
-class Deck extends Component {
-}
-```
-
-```
-class PlayButton extends Component {
+class Controls extends Component {
   render() {
     return (
-        <div className="scoreboard">
-          <h1>Your score:</h1>
-          {this.state.value}
-        </div>
-        )
+      <div className={"controls"}>
+        <button>
+          <h1>New Game</h1>
+        </button>
+      </div>
+    );
   }
 }
 ```
 
+And, displaying them in the app: 
+
 ```
-class NewGameButton extends Component {
-  render() {
-    return (
-        <div className="scoreboard">
-          <h1>Your score:</h1>
-          {this.state.value}
-        </div>
-        )
-  }
-}
+
 ```
+
+Of course, iterating on your own app, you'll write your own component logic and css and figure out how to get what you want to show up on the page.
+
 ## State management
 
 Redux

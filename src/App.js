@@ -159,7 +159,7 @@ const newPlayer = () => ({
   card: null
 });
 
-const players = ["Nicole", "Rob", "Jessy", "Anthony"];
+const players = ["Nicole", "Rob"];
 const defaultState = players.reduce((memo, name) => {
   memo[name] = newPlayer();
   return memo;
@@ -230,7 +230,12 @@ class App extends Component {
       <Provider store={store}>
         <div className="App">
           <div className="App-header">
-            <h1>Winner Takes All!</h1>
+            <h2>Winner Takes All</h2>
+            <small>
+              <a href="https://github.com/rrcobb/winner-take-all-tutorial">
+                (♥ Fin)
+              </a>
+            </small>
           </div>
           <div className="gameboard">
             {players.map((name, index) => (
