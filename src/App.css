@@ -2,13 +2,9 @@
   text-align: center;
 }
 
-.App-logo { animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-}
-
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 70px;
   padding: 20px;
   color: white;
 }
@@ -18,32 +14,102 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .card {
-    display: inline-block;
-    width: 3.3em;
-    height: 4.6em;
-    border: 1px solid #666;
-    border-radius: .3em;
-    -moz-border-radius: .3em;
-    -webkit-border-radius: .3em;
-    -khtml-border-radius: .3em;
-    padding: .25em;
-    margin: 0 .5em .5em 0;
-    text-align: center;
-    font-size: 3.2em; /* @change: adjust this value to make bigger or smaller cards */
-    font-weight: normal;
-    font-family: Arial, sans-serif;
-    position: relative;
-    background-color: #fff;
-    -moz-box-shadow: .2em .2em .5em #333;
-    -webkit-box-shadow: .2em .2em .5em #333;
-    box-shadow: .2em .2em .5em #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.3em;
+  height: 4.6em;
+  border: 1px solid #666;
+  border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+  -khtml-border-radius: 0.3em;
+  padding: 0.25em;
+  margin: 0 0.5em 0.5em 0;
+  text-align: center;
+  font-size: 3.2em; /* @change: adjust this value to make bigger or smaller cards */
+  font-weight: normal;
+  font-family: Arial, sans-serif;
+  position: relative;
+  background-color: #fff;
+}
+.card::before {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.card::after {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.heart,
+.diamond {
+  color: #f45042;
+}
+.heart::before,
+.heart::after {
+  content: "♥";
+}
+
+.diamond::before,
+.diamond::after {
+  content: "♦";
+}
+
+.spade,
+.club {
+  color: #1d1e30;
+}
+
+.spade::before,
+.spade::after {
+  content: "♠";
+}
+
+.club::before,
+.club::after {
+  content: "♣";
+}
+
+.deck {
+  display: inline-block;
+  width: 3.3em;
+  height: 4.6em;
+  border: 1px solid #666;
+  border-radius: 0.3em;
+  -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
+  -khtml-border-radius: 0.3em;
+  padding: 0.25em;
+  margin: 0 0.5em 0.5em 0;
+  text-align: center;
+  font-size: 3.2em; /* @change: adjust this value to make bigger or smaller cards */
+  position: relative;
+  background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Eaton_Speedwell_Model_Bicycle%2C_1917.png/258px-Eaton_Speedwell_Model_Bicycle%2C_1917.png");
+  background-size: contain;
+  -moz-box-shadow: 0.2em 0.2em 0.5em #333;
+  -webkit-box-shadow: 0.2em 0.2em 0.5em #333;
+  box-shadow: 0.2em 0.2em 0.5em #333;
 }
 
 .scoreboard {
   cursor: pointer;
+}
+
+.gameboard {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }

@@ -179,12 +179,19 @@ We want to build an online version of the popular kids card game. We want to sho
 - A button to play a card
 - A button to start a new game
 
-Translating those into components, we get
-- Card
-- Deck
+Set names
+Keep historical record of games
+
+- Player
+  - Name
+  - Deck
+    - Running count of cards
+    - 'Peek' cards in the deck
+  - Card
 - ScoreBoard
-- PlayButton
-- NewGameButton
+- Controls
+  - PlayButton
+  - NewGameButton
 
 ## Creating a component
 Components encapsulate the logic for the _look_ and _behavior_ of some part of the UI you're building.
@@ -346,6 +353,51 @@ class App extends Component {
 
 We're starting to see how we can reuse a component with slightly different behavior in different places.
 
+Let's add sketched-out versions of the other components we want.
+
+```
+class Scoreboard extends Component {
+  render() {
+    return (
+        <div className="scoreboard">
+          <h1>Your score:</h1>
+          {this.state.value}
+        </div>
+        )
+  }
+}
+```
+
+```
+class Deck extends Component {
+}
+```
+
+```
+class PlayButton extends Component {
+  render() {
+    return (
+        <div className="scoreboard">
+          <h1>Your score:</h1>
+          {this.state.value}
+        </div>
+        )
+  }
+}
+```
+
+```
+class NewGameButton extends Component {
+  render() {
+    return (
+        <div className="scoreboard">
+          <h1>Your score:</h1>
+          {this.state.value}
+        </div>
+        )
+  }
+}
+```
 ## State management
 
 Redux
@@ -353,14 +405,6 @@ Redux
 ```
 yarn add redux react-redux
 ```
-
-
-
-
-
-
-
-
 
 
 ## Adding some State

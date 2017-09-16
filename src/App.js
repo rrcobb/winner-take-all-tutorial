@@ -1,105 +1,101 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { connect, Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
-
-const DEAL_CARDS = 'DealCards';
-
-const randomnumber = () => {
-  return Math.floor(Math.random() * 20) + 1;
-};
-
-export const dealCards = dispatch => {
-  const humanCard = randomnumber();
-  const computerCard = randomnumber();
-  dispatch({ type: DEAL_CARDS, data: { human: humanCard, computer: computerCard } });
-  if (computerCard > humanCard) {
-    dispatch({ type: 'IncrementValue', player: 'computer' });
-  } else if (humanCard > computerCard) {
-    dispatch({ type: 'IncrementValue', player: 'human' });
-  }
-};
-
-export const cardReducer = (state = { human: null, computer: null }, action) => {
-  switch (action.type) {
-    case DEAL_CARDS:
-      return action.data;
-    default:
-      return state;
-  }
-};
-
-const INCREMENT_VALUE = 'IncrementValue';
-export const incrementValue = player => {
-  return { type: INCREMENT_VALUE, player };
-};
-
-export const scoreReducer = (state = 0, action) => {
-  switch (action.type) {
-    case INCREMENT_VALUE:
-      if (action.player === 'human') {
-        return state + 1;
-      }
-      break;
-    default:
-      return state;
-  }
-  return state;
-};
-
-export const computerScoreReducer = (state = 1, action) => {
-  switch (action.type) {
-    case INCREMENT_VALUE:
-      if (action.player === 'computer') {
-        return state + 1;
-      }
-      break;
-    default:
-      return state;
-  }
-  return state;
-};
+import React, { Component } from "react";
+import "./App.css";
+import { connect, Provider } from "react-redux";
+import { combineReducers, createStore } from "redux";
 
 class Scoreboard extends Component {
   render() {
     return (
       <div className="scoreboard">
-        <h1>Your score:</h1>
-        {this.props.humanScore}
-
-        <h1>Computer's score:</h1>
-        {this.props.computerScore}
+        <h2>{this.props.name}</h2>
+        {this.props.count}
+        {this.props.reveal ? this.props.cards : null}
       </div>
     );
   }
 }
 
-const selector = state => ({ humanScore: state.score, computerScore: state.computerScore });
+class Card extends Component {
+  render() {
+    return <div className={`card ${this.props.suit}`}>{this.props.value}</div>;
+  }
+}
 
-Scoreboard =  connect(selector)(Scoreboard);
+class Deck extends Component {
+  render() {
+    return <div className={"deck"} />;
+  }
+}
 
-class UnconnectedCard extends Component {
+class UnconnectedPlayer extends Component {
   render() {
     return (
-      <div className="card" onClick={this.handleClick}>
-        {this.props.value}
+      <div>
+        <Deck />
+        <Card value={this.props.value} suit={"diamond"} />
+        <Scoreboard name={this.props.name} score={this.props.score} />
       </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  return { value: state.cards[ownProps.player] }
+  return { value: 15, name: "human" };
+};
+
+const Player = connect(mapStateToProps)(UnconnectedPlayer);
+
+class Controls extends Component {
+  render() {
+    return (
+      <div>
+        <button>
+          <h1>New Game!</h1>
+        </button>
+        <button>
+          <h2>Show Cards</h2>
+        </button>
+      </div>
+    );
+  }
 }
-const Card = connect(mapStateToProps)(UnconnectedCard);
 
+const randomInteger = () => {
+  return Math.floor(Math.random() * 20) + 1;
+};
 
-const reducer = combineReducers({
-  score: scoreReducer,
-  computerScore: computerScoreReducer,
-  cards: cardReducer,
-});
+const name = (state = "", action) => {
+  switch (action.type) {
+    case "ChangeName": {
+      return action.payload.name;
+    }
+    default:
+      return state;
+  }
+};
+
+const defaultPlayer = {
+  name: "",
+  cards: []
+};
+
+const player = (state = defaultPlayer, action) => {
+  return state;
+};
+
+const defaultState = {};
+const reducer = (state = defaultState, action) => {
+  switch (action.type) {
+    case "NewGame": {
+      return defaultState;
+    }
+    case "PlayCard": {
+    }
+    default:
+      return state;
+  }
+};
+
 const store = createStore(reducer);
 
 class App extends Component {
@@ -108,19 +104,13 @@ class App extends Component {
       <Provider store={store}>
         <div className="App">
           <div className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h2>Winner Takes All</h2>
+            <h1>Winner Takes All!</h1>
           </div>
-          computer
-          <Card player="human" />
-          <Card player="computer" />
-          you
-          <div>
-            <button onClick={() => dealCards(store.dispatch)}>
-              <h1>Play!</h1>
-            </button>
+          <div className="gameboard">
+            <Player name="human" />
+            <Player name="computer" />
           </div>
-          <Scoreboard />
+          <Controls />
         </div>
       </Provider>
     );
